@@ -10,13 +10,10 @@ class SideBar():
         button1 = tk.Button(window, text="do something",
                           command = self.do_something)
         
-        button2 = tk.Button(window, text="do something",
-                          command = self.do_something)
 
         window.grid(row = 0, column = 0)
         self.sometext.grid(row = 0, column = 1)
         button1.grid(row = 0, column = 2)
-        button2.grid(row = 0, column = 3)
 
         self.sometext.focus_set()
 
