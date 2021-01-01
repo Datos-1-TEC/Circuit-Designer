@@ -5,15 +5,15 @@ except ImportError:
 
 class SideBar():
     def __init__(self, root):
-        sidebarframe = tk.Frame(root)
-        self.sometext = tk.Text(sidebarframe)
-        button1 = tk.Button(sidebarframe, text="do something",
+        window = tk.Canvas(root,width=600, height = 600)
+        self.sometext = tk.Text(window)
+        button1 = tk.Button(window, text="do something",
                           command = self.do_something)
         
-        button2 = tk.Button(sidebarframe, text="do something",
+        button2 = tk.Button(window, text="do something",
                           command = self.do_something)
 
-        sidebarframe.grid(row = 0, column = 0)
+        window.grid(row = 0, column = 0)
         self.sometext.grid(row = 0, column = 1)
         button1.grid(row = 0, column = 2)
         button2.grid(row = 0, column = 3)
