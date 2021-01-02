@@ -1,17 +1,38 @@
 from tkinter import *
-import os
+import sys
 
-root = Tk()
-canvas = Canvas(root)
-canvas.pack()
+class popupWindow(object):
+    def __init__(self,master):
+        top=self.top=Toplevel(master)
+        self.l=Label(top,text="Hello World")
+        self.l.pack()
+        self.e=Entry(top)
+        self.e.pack()
+        self.b=Button(top,text='Ok',command=self.cleanup)
+        self.b.pack()
+    def cleanup(self):
+        self.value=self.e.get()
+        self.top.destroy()
 
-def cargarimg(archivo): # Se carga imagen
-    ruta = os.path.join('img', archivo)
-    imagen = PhotoImage(file = ruta)
-    return imagen
-    
-Res = cargarimg('FuenteVoltaje.png')
-butRes = Button(root, image = Res)
-butRes.pack()
+class mainWindow(object):
+    def __init__(self,master):
+        self.master=master
+        self.b=Button(master,text="click me!",command=self.popup)
+        self.b.pack()
+        self.b2=Button(master,text="print value",command=lambda: sys.stdout.write(self.entryValue()+'\n'))
+        self.b2.pack()
 
-root.mainloop()
+    def popup(self):
+        self.w=popupWindow(self.master)
+        self.b["state"] = "disabled" 
+        self.master.wait_window(self.w.top)
+        self.b["state"] = "normal"
+
+    def entryValue(self):
+        return self.w.value
+
+
+if __name__ == "__main__":
+    root=Tk()
+    m=mainWindow(root)
+    root.mainloop()
