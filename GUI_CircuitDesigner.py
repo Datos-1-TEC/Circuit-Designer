@@ -13,7 +13,6 @@ class DropDown():
         w.pack(fill = BOTH)
 
 class MainPanel(Canvas):
-
     def grid(self):
         w = self.w
         h = self.h
@@ -39,19 +38,56 @@ class SideBar():
     def createImageButtons(self):
         resImage = self.cargarimg('Res.png')
         volImage = self.cargarimg('FuenteVoltaje.png')
-        resBut = Button(self.window, image = resImage)
+        resBut = Button(self.window, image = resImage, command = self.createResistor)        
         resBut.image = resImage
         resBut.place(anchor = CENTER, x = 100, y = 200)
         volBut = Button(self.window, text = "Fuente", image = volImage)
         volBut.image = volImage
         volBut.place(anchor = CENTER, x = 100, y = 400)
-        
+
+    def createResistor(self):
+        self.resistor = Resistor(self.root, 10, "max")
+    
+    """
+    def move(self, event):
+        x = self.x
+        y = self.y
+        resImage2 = self.cargarimg('Res.png')
+        self.image2 = self.paintWindow.create_image(self.x, self.y, image = resImage2)
+        print("move")
+    """
+
 
     def __init__(self, root):
         self.root = root
         self.window = Canvas(self.root,width=200, height = 600)
         self.window.pack(side = RIGHT, fill = Y)
+        self.label = Label(self.root, text = "")
+        self.label.pack(pady = 20)
         self.createImageButtons()
+        self.x = 50
+        self.y = 50
+
+
+class Resistor():
+    def cargarimg(self, archivo): # Se carga imagen
+        ruta = os.path.join('img', archivo)
+        imagen = PhotoImage(file = ruta)
+        return imagen
+
+    def show_res(self):
+        res_image = self.cargarimg('Res.png')
+        res_image_pos = MainApplication.MP.paintWindow.create_image(self.x, self.y, image = res_image)
+        
+    
+    def __init__(self, root, resistance, name):
+        self.root = root
+        self.resistance = resistance
+        self.name = name
+        self.x = 50
+        self.y = 50
+        show = self.show_res()
+
 
 class MainApplication():
     def __init__(self, parent):
