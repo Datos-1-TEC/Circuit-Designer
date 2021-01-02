@@ -19,6 +19,7 @@ class LinkedList(object):
 			else:
 				return "Nodo no está en lista"
 
+ 
 	
 	def print_list(self):
 		if self.head == None:
@@ -51,16 +52,18 @@ class LinkedList(object):
 		else:
 			node.next = self.head
 			self.head = node
+			
+	def append(self, new_data): 
+			new_node = Node(new_data) 
+			if self.head is None: 
+				self.head = new_node 
+				return
+	
+			last = self.head 
+			while (last.next): 
+				last = last.next
 
-    def insert_at_end(self, data):
-        new_node = Node(data)
-        if self.head is None:
-            self.head = new_node
-            return
-        n = self.head
-        while n.next is not None:
-            n = n.next
-        n.next = new_node;
+			last.next =  new_node
 
 	def delete(self, data):
 		if not self.head:
@@ -83,11 +86,13 @@ class LinkedList(object):
 		return
 
 
+
+
 shortestPath = LinkedList()
 shortestPath.insert("a")
-shortestPath.insert("b")
-shortestPath.insert("c")
-shortestPath.insert("d")
-shortestPath.insert("e")
-shortestPath.insert("f")
+shortestPath.append("b")
+shortestPath.append("c")
+shortestPath.append("d")
+shortestPath.append("e")
+shortestPath.append("f")
 shortestPath.print_list()
