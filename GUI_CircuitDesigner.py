@@ -44,19 +44,12 @@ class SideBar():
         volBut = Button(self.window, text = "Fuente", image = volImage)
         volBut.image = volImage
         volBut.place(anchor = CENTER, x = 100, y = 400)
+        
+        
 
-    def createResistor(self):
-        self.resistor = Resistor(self.root, 10, "max")
-    
-    """
-    def move(self, event):
-        x = self.x
-        y = self.y
-        resImage2 = self.cargarimg('Res.png')
-        self.image2 = self.paintWindow.create_image(self.x, self.y, image = resImage2)
-        print("move")
-    """
-
+    def createResistor(self):       
+        Res1 = Resistor(self.root, 10, "max")
+        
 
     def __init__(self, root):
         self.root = root
@@ -76,9 +69,11 @@ class Resistor():
         return imagen
 
     def show_res(self):
-        res_image = self.cargarimg('Res.png')
-        res_image_pos = MainApplication.MP.paintWindow.create_image(self.x, self.y, image = res_image)
-        
+        resImage = self.cargarimg('Res.png')
+        MA.MP.paintWindow.image = resImage
+        MA.MP.paintWindow.create_image(200, 100, image = resImage, anchor = NW)
+        MA.MP.paintWindow.create_line(0,0,100,100)
+        print("Se puso el resistor")
     
     def __init__(self, root, resistance, name):
         self.root = root
@@ -86,7 +81,7 @@ class Resistor():
         self.name = name
         self.x = 50
         self.y = 50
-        show = self.show_res()
+        self.show_res()
 
 
 class MainApplication():
@@ -96,12 +91,11 @@ class MainApplication():
         self.MP = MainPanel(self.parent)
         self.MP.grid()
         self.SB = SideBar(self.parent)
-        
-
+    
 
 if __name__ == "__main__":
     root = Tk()
     root.geometry('1000x600')
-    root.resizable(height= NO, width = YES)
-    MainApplication(root)
+    root.resizable(height= YES, width = YES)
+    MA = MainApplication(root)
     root.mainloop()
