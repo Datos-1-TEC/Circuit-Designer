@@ -1,11 +1,11 @@
-from typing import List
+from LinkedList import LinkedList
 import sys
 
 
 class Node:
     def __init__(self,name):
         self.name = name 
-        self.shortesPath = list()
+        self.shortesPath = LinkedList()
         self.distance = sys.maxsize
         self.adjacentNodes = {}
 
@@ -99,7 +99,7 @@ graph.addNode(nodeD)
 graph.addNode(nodeE)
 graph.addNode(nodeF)
 
-graph.print_graph_nodes()
+#graph.print_graph_nodes()
 
 print("done")
         
