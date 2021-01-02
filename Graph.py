@@ -10,7 +10,8 @@ class Node:
         self.adjacentNodes = {}
 
     def add_destination(self,destination,distance):
-        self.adjacentNodes[destination] = distance
+        self.distance = distance
+        self.adjacentNodes[destination] = self.distance
 
     def get_name(self):
         return self.name
@@ -36,6 +37,12 @@ class Node:
     def set_adjacent_nodes(self,adjacent_nodes):
         self.adjacentNodes = adjacent_nodes
 
+    def print_adjacent_nodes(self):
+        adj_nodes = self.get_adjacent_nodes()
+        for key, value in adj_nodes.items():
+            print(key.get_name(), ' : ', value)
+
+
 
 class Graph:
     def __init__(self):
@@ -44,7 +51,13 @@ class Graph:
     def addNode(self,node):
         self.nodes.add(node)
 
-    
+    def print_graph_nodes(self):
+        printedSet = []
+        for x in self.nodes:
+            printedSet += [x.get_name()]
+        print(printedSet)
+
+
     
 
 
@@ -68,6 +81,15 @@ nodeD.add_destination(nodeF,1)
 
 nodeF.add_destination(nodeE,5)
 
+print(nodeA.get_adjacent_nodes())
+print(nodeA.get_distance())
+print(nodeA.get_name())
+
+
+
+nodeA.print_adjacent_nodes()
+
+
 graph = Graph()
 
 graph.addNode(nodeA)
@@ -76,6 +98,8 @@ graph.addNode(nodeC)
 graph.addNode(nodeD)
 graph.addNode(nodeE)
 graph.addNode(nodeF)
+
+graph.print_graph_nodes()
 
 print("done")
         
