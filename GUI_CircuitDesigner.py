@@ -25,7 +25,8 @@ class MainPanel(Canvas):
         for i in range(0, w, 50):
             self.paintWindow.create_line([(i, 0), (i, h)], tag='grid_line')
         for i in range(0, h, 50):
-            self.paintWindow.create_line([(0, i), (w, i)], tag='grid_line')           
+            self.paintWindow.create_line([(0, i), (w, i)], tag='grid_line')    
+
 
     def __init__(self, root):
         self.paintWindow = Canvas(root, width = 800, height = 600, bg = 'white')
@@ -103,9 +104,15 @@ class Resistor():
     def show_res(self):
         resImage = self.cargarimg('Res.png')
         MA.MP.paintWindow.image = resImage
-        MA.MP.paintWindow.create_image(200, 100, image = resImage, anchor = NW)
+        MA.MP.paintWindow.create_image(100, 100, image = resImage)
         MA.MP.paintWindow.create_line(0,0,100,100)
         print("Se puso el resistor")
+
+    def move(self, e):
+        resImage = self.cargarimg('Res.png')
+        MA.MP.paintWindow.image = resImage
+        MA.MP.paintWindow.create_image(e.x, e.y, image = resImage)
+    
     
     def __init__(self, root, resistance, name):
         self.root = root
@@ -114,6 +121,8 @@ class Resistor():
         self.x = 50
         self.y = 50
         self.show_res()
+        MA.MP.paintWindow.bind('<B1-Motion>', self.move)
+        
 
 
 class MainApplication():
