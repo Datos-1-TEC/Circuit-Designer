@@ -58,8 +58,6 @@ class Graph:
         print(printedSet)
 
 
-    
-
 
 nodeA = Node("A")
 nodeB = Node("B")
@@ -81,6 +79,8 @@ nodeD.add_destination(nodeF,1)
 
 nodeF.add_destination(nodeE,5)
 
+
+print("method get_adjacent_nodes()")
 print(nodeA.get_adjacent_nodes())
 print(nodeA.get_distance())
 print(nodeA.get_name())
@@ -100,6 +100,9 @@ graph.addNode(nodeE)
 graph.addNode(nodeF)
 
 #graph.print_graph_nodes()
+
+
+
 
 print("done")
         

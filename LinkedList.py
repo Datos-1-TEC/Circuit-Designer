@@ -86,7 +86,7 @@ class LinkedList(object):
 
 
 
-
+"""
 shortestPath = LinkedList()
 shortestPath.append("a")
 shortestPath.append("b")
@@ -95,3 +95,4 @@ shortestPath.append("d")
 shortestPath.append("e")
 shortestPath.append("f")
 shortestPath.print_list()
+"""

@@ -7,8 +7,6 @@ class Dijkstra:
         self.settledNodes = set()
         self.unsettledNodes = set()
 
-
-
     def calculateShortestPathFromSource(self,graph, source):
         source.set_distance(0)
 
@@ -18,18 +16,17 @@ class Dijkstra:
             #currentNode = Node("")
             currentNode = self.getLowestDistanceNode(self.unsettledNodes)
             self.unsettledNodes.remove(currentNode)
-            for n,i in currentNode.get_adjacent_nodes():
+            for n,i in currentNode.get_adjacent_nodes().items():
                 adjacencyPair[n] = i
                 adjacentNode = adjacencyPair.get(n)
                 edgeWeight = adjacencyPair.get(i)
                 if not self.settledNodes.__contains__(adjacentNode):
-                    calculateMinimumDistance(adjacentNode,edgeWeight,currentNode)
+                    self.calculateMinimumDistance(adjacentNode,edgeWeight,currentNode)
                     self.unsettledNodes.add(adjacentNode)
 
             self.settledNodes.add(currentNode)
 
         return graph
-
 
     def getLowestDistanceNode(self, unsettledNodes):
         lowestDistanceNode = None
@@ -49,7 +46,7 @@ class Dijkstra:
             shortestPath = sourceNode.get_shortest_path()
             shortestPath.insert(sourceNode)
             evaluationNode.set_shortest_path(shortestPath)
-            
+
 
 
 
