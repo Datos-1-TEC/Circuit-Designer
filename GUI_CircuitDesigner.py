@@ -4,6 +4,8 @@ except ImportError:
     from tkinter import *    ## Python 3.x
 import os
 
+import random
+
 class DropDown():
     def simulate(self):
         print("Simulando...")
@@ -105,6 +107,7 @@ class SideBar():
 
     def createResistor(self, value, name):       
         Res1 = Resistor(self.root, value, name)
+        MA.resList.append(Res1)
         print(Res1.name)
         print(Res1.resistance)
 
@@ -116,6 +119,7 @@ class SideBar():
 
     def createFuenteVoltaje(self, value, name):       
         Vol1 = FuenteVoltaje(self.root, value, name)
+        MA.volList.append(Vol1)
         print(Vol1.name)
         print(Vol1.voltage)    
 
@@ -129,8 +133,7 @@ class SideBar():
         self.x = 50
         self.y = 50
 
-
-class Resistor():
+class Resistor(object):
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
         imagen = PhotoImage(file = ruta)
@@ -138,16 +141,31 @@ class Resistor():
 
     def show_res(self):
         resImage = self.cargarimg('Res.png')
+        MA.resImg.append(resImage)
         MA.MP.paintWindow.image = resImage
-        MA.MP.paintWindow.create_image(100, 100, image = resImage)
-        MA.MP.paintWindow.create_line(0,0,100,100)
-        print("Se puso el resistor")
-
+        imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage)
+        print("Se puso el resistor")    
+        #imgRes.bind("<Button-1>",drag_start)
+        #imgRes.bind("<B1-Motion>",drag_motion)
+        MA.MP.paintWindow.tag_bind(imgRes, '<Button-1>', self.drag_start)
+        MA.MP.paintWindow.tag_bind(imgRes, '<B1-Motion>', self.drag_motion)
+        print(type(imgRes))
+    
     def move(self, e):
         resImage = self.cargarimg('Res.png')
         MA.MP.paintWindow.image = resImage
         MA.MP.paintWindow.create_image(e.x, e.y, image = resImage)
-    
+
+    def drag_start(self, event):
+        widget = event.widget
+        widget.startX = event.x
+        widget.startY = event.y
+
+    def drag_motion(self, event):
+        widget = event.widget
+        x = widget.winfo_x() - widget.startX + event.x
+        y = widget.winfo_y() - widget.startY + event.y
+        widget.place(x=x,y=y)
     
     def __init__(self, root, resistance, name):
         self.root = root
@@ -156,7 +174,9 @@ class Resistor():
         self.x = 50
         self.y = 50
         self.show_res()
-        MA.MP.paintWindow.bind('<B1-Motion>', self.move)
+        #MA.MP.paintWindow.bind('<B1-Motion>', self.move)
+        
+
         
 
 class FuenteVoltaje():
@@ -177,7 +197,6 @@ class FuenteVoltaje():
         MA.MP.paintWindow.image = volImage
         MA.MP.paintWindow.create_image(e.x, e.y, image = volImage)
     
-    
     def __init__(self, root, voltage, name):
         self.root = root
         self.voltage = voltage
@@ -187,7 +206,6 @@ class FuenteVoltaje():
         self.show_vol()
         MA.MP.paintWindow.bind('<B1-Motion>', self.move)
 
-
 class MainApplication():
     def __init__(self, parent):
         self.parent = parent
@@ -195,7 +213,9 @@ class MainApplication():
         self.MP = MainPanel(self.parent)
         self.MP.grid()
         self.SB = SideBar(self.parent)
-    
+        self.resList = []
+        self.resImg = []
+        self.volList = []    
 
 if __name__ == "__main__":
     root = Tk()
