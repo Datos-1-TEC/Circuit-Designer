@@ -145,18 +145,8 @@ class Resistor(object):
         MA.MP.paintWindow.image = resImage
         imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage, tag = "resistance")
         print("Se puso el resistor")    
-        #imgRes.bind("<Button-1>",drag_start)
-        #imgRes.bind("<B1-Motion>",drag_motion)
-        #MA.MP.paintWindow.tag_bind(imgRes, '<Button-1>', self.drag_start)
-        #MA.MP.paintWindow.tag_bind(imgRes, '<B1-Motion>', self.drag_motion)
         print(type(imgRes))
-    """
-    def move(self, e):
-        resImage = self.cargarimg('Res.png')
-        MA.MP.paintWindow.image = resImage
-        MA.MP.paintWindow.create_image(e.x, e.y, image = resImage)
 
-    """
 
     def drag_start(self, event):
         """Begining drag of an object"""
@@ -208,24 +198,48 @@ class FuenteVoltaje():
 
     def show_vol(self):
         volImage = self.cargarimg('FuenteVoltaje.png')
+        MA.volImg.append(volImage)
         MA.MP.paintWindow.image = volImage
-        MA.MP.paintWindow.create_image(100, 100, image = volImage)
-        MA.MP.paintWindow.create_line(0,0,100,100)
+        MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
         print("Se puso la fuente de voltaje")
 
-    def move(self, e):
-        volImage = self.cargarimg('FuenteVoltaje.png')
-        MA.MP.paintWindow.image = volImage
-        MA.MP.paintWindow.create_image(e.x, e.y, image = volImage)
+    def drag_start(self, event):
+        """Begining drag of an object"""
+        # record the item and its location
+        self._drag_data["item"] = MA.MP.paintWindow.find_closest(event.x, event.y)[0]
+        self._drag_data["x"] = event.x
+        self._drag_data["y"] = event.y
+
+    def drag_stop(self, event):
+        """End drag of an object"""
+        # reset the drag information
+        self._drag_data["item"] = None
+        self._drag_data["x"] = 0
+        self._drag_data["y"] = 0
+
+    def drag(self, event):
+        """Handle dragging of an object"""
+        # compute how much the mouse has moved
+        delta_x = event.x - self._drag_data["x"]
+        delta_y = event.y - self._drag_data["y"]
+        # move the object the appropriate amount
+        MA.MP.paintWindow.move(self._drag_data["item"], delta_x, delta_y)
+        # record the new position
+        self._drag_data["x"] = event.x
+        self._drag_data["y"] = event.y
     
     def __init__(self, root, voltage, name):
         self.root = root
+        self._drag_data = {"x": 0, "y": 0, "item": None}
+        MA.MP.paintWindow.tag_bind("voltage", "<ButtonPress-1>", self.drag_start)
+        MA.MP.paintWindow.tag_bind("voltage", "<ButtonRelease-1>", self.drag_stop)
+        MA.MP.paintWindow.tag_bind("voltage", "<B1-Motion>", self.drag)
         self.voltage = voltage
         self.name = name
         self.x = 50
         self.y = 50
         self.show_vol()
-        MA.MP.paintWindow.bind('<B1-Motion>', self.move)
+        #MA.MP.paintWindow.bind('<B1-Motion>', self.move)
 
 class MainApplication():
     def __init__(self, parent):
@@ -236,7 +250,8 @@ class MainApplication():
         self.SB = SideBar(self.parent)
         self.resList = []
         self.resImg = []
-        self.volList = []    
+        self.volList = []  
+        self.volImg = []  
 
 if __name__ == "__main__":
     root = Tk()
