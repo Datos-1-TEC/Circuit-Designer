@@ -67,16 +67,16 @@ class Graph:
     def print_graph_nodes(self):
         printedSet = []
         for x in self.nodes:
+            print(x.get_name(), ";", x.get_distance())
             printedSet += [x.get_name()]
         print(printedSet)
 
-class Resistor:
+class Resistor(Node):
     def __init__(self, name, val): 
         self.name = name
         self.val = val
-        self.prev_node = Node("PREV")
-        self.next_node = Node("NEXT")
         self.unit = "Ohms"
+        Node.__init__(self, name)
 
     def get_name(self):
         return self.name
@@ -90,29 +90,15 @@ class Resistor:
     def set_val(self, val):
         self.val = val
 
-    def get_prev_node(self):
-        return self.prev_node
-    
-    def get_next_node(self):
-        return self.next_node
-    
-    def set_next_node(self, connection):
-        self.next_node = connection
-
-    def set_prev_node(self, connection):
-        self.prev_node = connection
-
     def print_resistor(self):
         print("Resistor name: %s value: %s", self.get_name(), self.get_val(), self.unit)
 
-class Voltage:
+class Voltage (Node):
     def __init__(self, name, val): 
         self.name = name
         self.val = val
-        self.prev_node = Node("PREV")
-        self.next_node = Node("NEXT")
-        self.reference = 0
         self.unit = "V"
+        Node.__init__(self, name)
 
     def get_name(self):
         return self.name
@@ -129,12 +115,6 @@ class Voltage:
     def set_val(self, val):
         self.val = val
 
-    def get_prev_node(self):
-        return self.prev_node
-    
-    def get_next_node(self):
-        return self.next_node
-
     def print_voltage(self):
         print("Source name: %s value: %s", self.get_name(), self.get_val(), self.unit)
 
@@ -147,41 +127,43 @@ class CircuitExample:
         
     
     def create_components(self):
+       
+        C0 = Node("C0")
+        C1 = Node("C1")
+        C2 = Node("C2")
+        C3 = Node("C3")     
 
         R1  = Resistor("R1", 100)
         R2  = Resistor("R2", 200)
         R3  = Resistor("R3", 300)
         V1 = Voltage("Source", 5)
+        V0 = Voltage("Ref", 0)
 
-        V1.get_prev_node().set_name("0")
-        V1.get_next_node().set_name("1")
-
-        R1.set_prev_node(V1.get_next_node())
-        R1.get_next_node().set_name("2")
-
-        R2.set_prev_node(R1.get_next_node())
-        R2.set_next_node(V1.get_prev_node())
-
-        R3.set_prev_node(R2.get_prev_node())
-        R3.set_next_node(V1.get_prev_node())
+        V0.add_destination(C0, 0)
+        C0.add_destination(V1, 0)
+        V1.add_destination(C1, 0)
+        C1.add_destination(R1, R1.get_val())
+        R1.add_destination(C2, 0)
+        C2.add_destination(R2, R2.get_val())
+        R2.add_destination(V0, 0)
+        R1.add_destination(C3, 0)
+        C3.add_destination(R3, R3.get_val())
+        R3.add_destination(V0, 0)
 
         circuitGraph = Graph()
-        circuitGraph.addNode(R1.get_prev_node())
-        circuitGraph.addNode(R1.get_next_node())
-        circuitGraph.addNode(R2.get_next_node())
-
-        circuitGraph.add_edge(R1.get_prev_node(), R1.get_next_node(), R1.get_val())
-        circuitGraph.add_edge(R2.get_prev_node(), R2.get_next_node(), R2.get_val())
-        circuitGraph.add_edge(R3.get_prev_node(), R3.get_next_node(), R3.get_val())
-
-        circuitGraph.print_edges()
-
+        circuitGraph.addNode(C0)
+        circuitGraph.addNode(C1)
+        circuitGraph.addNode(C2)
+        circuitGraph.addNode(C3)
+        print("Vista desde cada nodo")
+        C0.print_adjacent_nodes()
+        C1.print_adjacent_nodes()
+        C2.print_adjacent_nodes()
+        C3.print_adjacent_nodes()
+        print("Vista desde el grafo")
+        circuitGraph.print_graph_nodes()
 
 C1 = CircuitExample()
-
-
-
-
 
 """ nodeA = Node("A")
 nodeB = Node("B")
