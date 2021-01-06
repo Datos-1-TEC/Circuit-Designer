@@ -42,8 +42,6 @@ class Node:
         for key, value in adj_nodes.items():
             print(key.get_name(), ' : ', value)
 
-
-
 class Graph:
     def __init__(self):
 
@@ -58,6 +56,9 @@ class Graph:
             self.edges[start] = {}
 
         self.edges[start][end] = distance
+
+    def get_nodes(self):
+        return self.nodes
 
     def print_edges(self):
         edges = self.edges
@@ -163,8 +164,60 @@ class CircuitExample:
         print("Vista desde el grafo")
         circuitGraph.print_graph_nodes()
 
-C1 = CircuitExample()
+#C1 = CircuitExample()
+class ElectricCircuit:
+    def __init__(self):
+        self.graph_circuit = Graph()
+        self.V0 = Voltage("Ref", 0)
+        self.graph_circuit.addNode(self.V0)        
 
+    def create_resistor_link(self, resistor, connection_name):
+        connection = Node(connection_name)
+        connection.add_destination(resistor, resistor.get_val())
+        self.graph_circuit.addNode(connection)
+    
+    def create_voltage_link(self, voltage, connection_name):
+        connection = Node(connection_name)
+        connection.add_destination(voltage, 0)
+        self.graph_circuit.addNode(connection)
+
+    def connect_components(self, component1, component2):
+        graph_nodes = self.graph_circuit.get_nodes()  
+
+        for node in graph_nodes:
+            for adjNode in node.get_adjacent_nodes():
+                if adjNode.get_name() == component2.get_name():
+                    component1.add_destination(component2, 0)
+
+    def get_V0 (self):
+        return self.V0
+
+    def print_info(self):
+        print("visto desde los nodos conexion:")
+        for node in self.graph_circuit.get_nodes():
+            print(node.print_adjacent_nodes())
+        print("visto desde el grafo:")
+        self.graph_circuit.print_graph_nodes()
+
+R1  = Resistor("R1", 100)
+R2  = Resistor("R2", 200)
+R3  = Resistor("R3", 300)
+V1 = Voltage("Source", 5)
+
+EC1 = ElectricCircuit()
+
+EC1.create_voltage_link(V1, "C0")
+EC1.create_resistor_link(R1, "C1")
+EC1.create_resistor_link(R2, "C2")
+EC1.create_resistor_link(R3, "C3")
+EC1.connect_components(R1, R2)
+EC1.connect_components(R1, R3)
+EC1.connect_components(EC1.get_V0(), V1)
+EC1.connect_components(V1, R1)
+EC1.connect_components(R2, EC1.get_V0())
+EC1.connect_components(R3, EC1.get_V0())
+EC1.print_info()
+  
 """ nodeA = Node("A")
 nodeB = Node("B")
 nodeC = Node("C")
