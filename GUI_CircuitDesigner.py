@@ -47,12 +47,16 @@ class popupWindow(object):
         self.l2.pack()
         self.e2 = Entry(top)
         self.e2.pack()
+        self.cbValue = BooleanVar()
+        self.CB = Checkbutton(top, text = 'Vertical', variable = self.cbValue)
+        self.CB.pack()
         self.b = Button(top, text = 'Ok', command = self.accept)
         self.b.pack()
 
     
     def accept(self):
-        MA.SB.createResistor(self.e2.get(), self.e.get())
+        MA.SB.createResistor(self.e2.get(), self.e.get(), self.cbValue.get())
+        print(self.cbValue.get())
         self.cleanup()
 
     def cleanup(self):
@@ -72,11 +76,15 @@ class popupWindowVol(object):
         self.l4.pack()
         self.e4 = Entry(top)
         self.e4.pack()
+        self.cbValue = BooleanVar()
+        self.CB = Checkbutton(top, text = 'Vertical', variable = self.cbValue)
+        self.CB.pack()
         self.b2 = Button(top, text = 'Ok', command = self.accept2)
         self.b2.pack()
 
+
     def accept2(self):
-        MA.SB.createFuenteVoltaje(self.e4.get(), self.e3.get())
+        MA.SB.createFuenteVoltaje(self.e4.get(), self.e3.get(), self.cbValue.get())
         self.cleanup2()
 
     def cleanup2(self):
@@ -105,8 +113,8 @@ class SideBar():
         self.root.wait_window(self.w.top)
         self.resBut["state"] = "normal"
 
-    def createResistor(self, value, name):       
-        Res1 = Resistor(self.root, value, name)
+    def createResistor(self, value, name, vertical):       
+        Res1 = Resistor(self.root, value, name, vertical)
         MA.resList.append(Res1)
         print(Res1.name)
         print(Res1.resistance)
@@ -117,8 +125,8 @@ class SideBar():
         self.root.wait_window(self.w.top)
         self.volBut["state"] = "normal"
 
-    def createFuenteVoltaje(self, value, name):       
-        Vol1 = FuenteVoltaje(self.root, value, name)
+    def createFuenteVoltaje(self, value, name, vertical):       
+        Vol1 = FuenteVoltaje(self.root, value, name, vertical)
         MA.volList.append(Vol1)
         print(Vol1.name)
         print(Vol1.voltage)    
@@ -140,7 +148,11 @@ class Resistor(object):
         return imagen
 
     def show_res(self):
-        resImage = self.cargarimg('Res.png')
+        if self.vertical == False:
+            resImage = self.cargarimg('Res.png')
+        else:
+            resImage = self.cargarimg('Res2.png')
+
         MA.resImg.append(resImage)
         MA.MP.paintWindow.image = resImage
         imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage, tag = "resistance")
@@ -174,7 +186,8 @@ class Resistor(object):
         self._drag_data["y"] = event.y
 
     
-    def __init__(self, root, resistance, name):
+    def __init__(self, root, resistance, name, vertical):
+        self.vertical = vertical
         self.root = root
         self._drag_data = {"x": 0, "y": 0, "item": None}
         MA.MP.paintWindow.tag_bind("resistance", "<ButtonPress-1>", self.drag_start)
@@ -197,7 +210,11 @@ class FuenteVoltaje():
         return imagen
 
     def show_vol(self):
-        volImage = self.cargarimg('FuenteVoltaje.png')
+        if self.vertical == True:
+            volImage = self.cargarimg('FuenteVoltaje.png')
+        else:
+            volImage = self.cargarimg('FuenteVoltaje2.png')
+            
         MA.volImg.append(volImage)
         MA.MP.paintWindow.image = volImage
         MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
@@ -228,7 +245,8 @@ class FuenteVoltaje():
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
     
-    def __init__(self, root, voltage, name):
+    def __init__(self, root, voltage, name, vertical):
+        self.vertical = vertical
         self.root = root
         self._drag_data = {"x": 0, "y": 0, "item": None}
         MA.MP.paintWindow.tag_bind("voltage", "<ButtonPress-1>", self.drag_start)
