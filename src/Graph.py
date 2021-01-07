@@ -195,13 +195,17 @@ class ElectricCircuit:
     def print_info(self):
         print("visto desde los nodos conexion:")
         for node in self.graph_circuit.get_nodes():
-            print(node.print_adjacent_nodes())
+            if node != None:
+                node.print_adjacent_nodes()
+                
+            
         print("visto desde el grafo:")
         self.graph_circuit.print_graph_nodes()
 
 R1  = Resistor("R1", 100)
 R2  = Resistor("R2", 200)
 R3  = Resistor("R3", 300)
+R4 = Resistor("R4", 400)
 V1 = Voltage("Source", 5)
 
 EC1 = ElectricCircuit()
@@ -210,14 +214,28 @@ EC1.create_voltage_link(V1, "C0")
 EC1.create_resistor_link(R1, "C1")
 EC1.create_resistor_link(R2, "C2")
 EC1.create_resistor_link(R3, "C3")
-EC1.connect_components(R1, R2)
-EC1.connect_components(R1, R3)
+EC1.create_resistor_link(R4, "C4")
+
 EC1.connect_components(EC1.get_V0(), V1)
 EC1.connect_components(V1, R1)
+EC1.connect_components(R1, R2)
+EC1.connect_components(R1, R3)
+EC1.connect_components(V1, R4)
+EC1.connect_components(R4, R3)
 EC1.connect_components(R2, EC1.get_V0())
 EC1.connect_components(R3, EC1.get_V0())
 EC1.print_info()
-  
+print("Adjacentes de resistencias: ")
+print("R1->")
+R1.print_adjacent_nodes()
+print("R2->")
+R2.print_adjacent_nodes()
+print("R3->")
+R3.print_adjacent_nodes()
+print("R4->")
+R4.print_adjacent_nodes()  
+print("V0->")
+EC1.get_V0().print_adjacent_nodes()
 """ nodeA = Node("A")
 nodeB = Node("B")
 nodeC = Node("C")
