@@ -134,13 +134,13 @@ class SideBar():
         print(Vol1.voltage)    
 
     def cleanWin(self):
-        delres = MA.resImg[:]
-        delres2 = MA.resList[:]
-        self.paso()
-
-    def paso(self):
-        pass
-
+        MA.resImg.clear()
+        MA.resList.clear()
+        MA.volImg.clear()
+        MA.volList.clear()
+        MA.MP.paintWindow.delete("resistance")
+        MA.MP.paintWindow.delete("voltage")
+       
 
     def __init__(self, root):
         self.root = root
