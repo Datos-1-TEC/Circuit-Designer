@@ -106,6 +106,8 @@ class SideBar():
         self.volBut = Button(self.window, text = "Fuente", image = volImage, command = self.nameVol)
         self.volBut.image = volImage
         self.volBut.place(anchor = CENTER, x = 100, y = 400)
+        self.cleanBut = Button(self.window, text = "clean window", command = self.cleanWin)
+        self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
         
     def nameRes(self):
         self.w = popupWindow(self.root)
@@ -130,6 +132,15 @@ class SideBar():
         MA.volList.append(Vol1)
         print(Vol1.name)
         print(Vol1.voltage)    
+
+    def cleanWin(self):
+        delres = MA.resImg[:]
+        delres2 = MA.resList[:]
+        self.paso()
+
+    def paso(self):
+        pass
+
 
     def __init__(self, root):
         self.root = root
