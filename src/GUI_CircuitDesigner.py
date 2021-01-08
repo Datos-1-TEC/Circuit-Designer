@@ -198,11 +198,12 @@ class Resistor(object):
         self._drag_data["y"] = event.y
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
 
-    def phb(self, event):
-        
+    def phb(self, event):        
         if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
             print(event.x , event.y)
             self.x+=1
+        if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
+            print("cr7")        
         else:
             pass
             
@@ -241,7 +242,8 @@ class FuenteVoltaje():
             
         MA.volImg.append(volImage)
         MA.MP.paintWindow.image = volImage
-        MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
+        imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
+        self.corners = MA.MP.paintWindow.bbox(imgVol)
         print("Se puso la fuente de voltaje")
 
     def drag_start(self, event):
@@ -268,14 +270,25 @@ class FuenteVoltaje():
         # record the new position
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
+
+    def phb(self, event):    
+        if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
+            print(event.x , event.y)
+            self.x+=1
+        if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
+            print("cr7")        
+        else:
+            pass
     
     def __init__(self, root, voltage, name, vertical):
         self.vertical = vertical
         self.root = root
+        self.corners = None
         self._drag_data = {"x": 0, "y": 0, "item": None}
         MA.MP.paintWindow.tag_bind("voltage", "<ButtonPress-1>", self.drag_start)
         MA.MP.paintWindow.tag_bind("voltage", "<ButtonRelease-1>", self.drag_stop)
         MA.MP.paintWindow.tag_bind("voltage", "<B1-Motion>", self.drag)
+        MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.phb)
         self.voltage = voltage
         self.name = name
         self.x = 50
