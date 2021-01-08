@@ -163,10 +163,11 @@ class Resistor(object):
             resImage = self.cargarimg('Res.png')
         else:
             resImage = self.cargarimg('Res2.png')
-
+        
         MA.resImg.append(resImage)
         MA.MP.paintWindow.image = resImage
         imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage, tag = "resistance")
+        self.corners = MA.MP.paintWindow.bbox(imgRes)
         print("Se puso el resistor")    
         print(type(imgRes))
 
@@ -195,20 +196,32 @@ class Resistor(object):
         # record the new position
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
+        self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
 
-    
+    def phb(self, event):
+        
+        if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
+            print(event.x , event.y)
+            self.x+=1
+        else:
+            pass
+            
     def __init__(self, root, resistance, name, vertical):
         self.vertical = vertical
         self.root = root
         self._drag_data = {"x": 0, "y": 0, "item": None}
-        MA.MP.paintWindow.tag_bind("resistance", "<ButtonPress-1>", self.drag_start)
-        MA.MP.paintWindow.tag_bind("resistance", "<ButtonRelease-1>", self.drag_stop)
-        MA.MP.paintWindow.tag_bind("resistance", "<B1-Motion>", self.drag)
         self.resistance = resistance
         self.name = name
         self.x = 50
         self.y = 50
+        self.corners = None
+        MA.MP.paintWindow.tag_bind("resistance", "<ButtonPress-1>", self.drag_start)
+        MA.MP.paintWindow.tag_bind("resistance", "<ButtonRelease-1>", self.drag_stop)
+        MA.MP.paintWindow.tag_bind("resistance", "<B1-Motion>", self.drag)
+        MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.phb)
         self.show_res()
+        
+        #MA.MP.paintWindow.tag_bind("resistance", "<Button-1>", self.nhb)
         #MA.MP.paintWindow.bind('<B1-Motion>', self.move)
         
 
@@ -281,6 +294,7 @@ class MainApplication():
         self.resImg = []
         self.volList = []  
         self.volImg = []  
+        self.click = False
 
 if __name__ == "__main__":
     root = Tk()
