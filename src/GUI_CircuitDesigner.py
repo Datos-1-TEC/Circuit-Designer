@@ -163,13 +163,15 @@ class Resistor(object):
             resImage = self.cargarimg('Res.png') #Resistencia horizontal
             MA.resImg.append(resImage)        
             MA.MP.paintWindow.image = resImage            
-            imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage, tag = "resistance")                
+            imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage, tag = "resistance") 
+            self.img = imgRes               
             self.corners = MA.MP.paintWindow.bbox(imgRes) 
         else:
             resImage2 = self.cargarimg('Res2.png') #Resistencia vertical
             MA.resImg.append(resImage2)
             MA.MP.paintWindow.image = resImage2
             imgRes2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage2, tag = "resistance")
+            self.img = imgRes2
             self.corners = MA.MP.paintWindow.bbox(imgRes2)     
         
         print("Se puso el resistor")    
@@ -230,13 +232,15 @@ class Resistor(object):
         self.name = name
         self.x = 50
         self.y = 50
+        self.img = None
         self.corners = None
-        MA.MP.paintWindow.tag_bind("resistance", "<ButtonPress-1>", self.drag_start)
-        MA.MP.paintWindow.tag_bind("resistance", "<ButtonRelease-1>", self.drag_stop)
-        MA.MP.paintWindow.tag_bind("resistance", "<B1-Motion>", self.drag)
-        MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.phb)
-        #MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.nhb)
         self.show_res()
+        MA.MP.paintWindow.tag_bind(self.img, "<ButtonPress-1>", self.drag_start)
+        MA.MP.paintWindow.tag_bind(self.img, "<ButtonRelease-1>", self.drag_stop)
+        MA.MP.paintWindow.tag_bind(self.img, "<B1-Motion>", self.drag)
+        MA.MP.paintWindow.tag_bind(self.img, "<Button-3>", self.phb)
+        #MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.nhb)
+        
         
         #MA.MP.paintWindow.tag_bind("resistance", "<Button-1>", self.nhb)
         #MA.MP.paintWindow.bind('<B1-Motion>', self.move)
@@ -256,12 +260,14 @@ class FuenteVoltaje():
             MA.volImg.append(volImage)
             MA.MP.paintWindow.image = volImage
             imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
+            self.img = imgVol
             self.corners = MA.MP.paintWindow.bbox(imgVol)
         else:
             volImage2 = self.cargarimg('FuenteVoltaje2.png')            
             MA.volImg.append(volImage2)
             MA.MP.paintWindow.image = volImage2
             imgVol2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage2, tag = "voltage")
+            self.img = imgVol2
             self.corners = MA.MP.paintWindow.bbox(imgVol2)
         
         print("Se puso la fuente de voltaje")
@@ -290,6 +296,7 @@ class FuenteVoltaje():
         # record the new position
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
+        self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
 
     def phb(self, event):        
         if self.vertical == False:
@@ -318,13 +325,15 @@ class FuenteVoltaje():
         self.name = name
         self.x = 50
         self.y = 50
+        self.img = None
         self.corners = None
         self._drag_data = {"x": 0, "y": 0, "item": None}
-        MA.MP.paintWindow.tag_bind("voltage", "<ButtonPress-1>", self.drag_start)
-        MA.MP.paintWindow.tag_bind("voltage", "<ButtonRelease-1>", self.drag_stop)
-        MA.MP.paintWindow.tag_bind("voltage", "<B1-Motion>", self.drag)
-        MA.MP.paintWindow.tag_bind("voltage", "<Button-3>", self.phb)
         self.show_vol()
+        MA.MP.paintWindow.tag_bind(self.img, "<ButtonPress-1>", self.drag_start)
+        MA.MP.paintWindow.tag_bind(self.img, "<ButtonRelease-1>", self.drag_stop)
+        MA.MP.paintWindow.tag_bind(self.img, "<B1-Motion>", self.drag)
+        MA.MP.paintWindow.tag_bind(self.img, "<Button-3>", self.phb)
+        
         #MA.MP.paintWindow.bind('<B1-Motion>', self.move)
 
 class MainApplication():
