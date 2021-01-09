@@ -253,13 +253,17 @@ class FuenteVoltaje():
     def show_vol(self):
         if self.vertical == True:
             volImage = self.cargarimg('FuenteVoltaje.png')
+            MA.volImg.append(volImage)
+            MA.MP.paintWindow.image = volImage
+            imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
+            self.corners = MA.MP.paintWindow.bbox(imgVol)
         else:
-            volImage = self.cargarimg('FuenteVoltaje2.png')
-            
-        MA.volImg.append(volImage)
-        MA.MP.paintWindow.image = volImage
-        imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
-        self.corners = MA.MP.paintWindow.bbox(imgVol)
+            volImage2 = self.cargarimg('FuenteVoltaje2.png')            
+            MA.volImg.append(volImage2)
+            MA.MP.paintWindow.image = volImage2
+            imgVol2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage2, tag = "voltage")
+            self.corners = MA.MP.paintWindow.bbox(imgVol2)
+        
         print("Se puso la fuente de voltaje")
 
     def drag_start(self, event):
@@ -287,29 +291,39 @@ class FuenteVoltaje():
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
 
-    def phb(self, event):    
-        if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
+    def phb(self, event):        
+        if self.vertical == False:
+            if event.x > self.corners[0] and event.x < self.corners[0] + 15 and event.y > self.corners[1] and event.y < self.corners[3]:
             #print(event.x , event.y)
             #self.x+=1
-            print("cr34")
-        #if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
-            #print("cr7")        
+                print("max garro")
+            if event.x < self.corners[2] and event.x > self.corners[2] - 15 and event.y > self.corners[1] and event.y < self.corners[3]:
+                print("cr7")        
+            else:
+                pass
         else:
-            pass
+            if event.x > self.corners[0] and event.x < self.corners[2] and event.y > self.corners[1] and event.y < self.corners[1] + 15:
+            #print(event.x , event.y)
+            #self.x+=1
+                print("matt garro")
+            if event.x > self.corners[0] and event.x < self.corners[2] and event.y < self.corners[3] and event.y > self.corners[3] - 15:
+                print("cr9")        
+            else:
+                pass
     
     def __init__(self, root, voltage, name, vertical):
         self.vertical = vertical
         self.root = root
+        self.voltage = voltage
+        self.name = name
+        self.x = 50
+        self.y = 50
         self.corners = None
         self._drag_data = {"x": 0, "y": 0, "item": None}
         MA.MP.paintWindow.tag_bind("voltage", "<ButtonPress-1>", self.drag_start)
         MA.MP.paintWindow.tag_bind("voltage", "<ButtonRelease-1>", self.drag_stop)
         MA.MP.paintWindow.tag_bind("voltage", "<B1-Motion>", self.drag)
         MA.MP.paintWindow.tag_bind("voltage", "<Button-3>", self.phb)
-        self.voltage = voltage
-        self.name = name
-        self.x = 50
-        self.y = 50
         self.show_vol()
         #MA.MP.paintWindow.bind('<B1-Motion>', self.move)
 
