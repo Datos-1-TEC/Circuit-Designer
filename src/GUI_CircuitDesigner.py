@@ -160,16 +160,20 @@ class Resistor(object):
 
     def show_res(self):
         if self.vertical == False:
-            resImage = self.cargarimg('Res.png')
+            resImage = self.cargarimg('Res.png') #Resistencia horizontal
+            MA.resImg.append(resImage)        
+            MA.MP.paintWindow.image = resImage            
+            imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage, tag = "resistance")                
+            self.corners = MA.MP.paintWindow.bbox(imgRes) 
         else:
-            resImage = self.cargarimg('Res2.png')
+            resImage2 = self.cargarimg('Res2.png') #Resistencia vertical
+            MA.resImg.append(resImage2)
+            MA.MP.paintWindow.image = resImage2
+            imgRes2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage2, tag = "resistance")
+            self.corners = MA.MP.paintWindow.bbox(imgRes2)     
         
-        MA.resImg.append(resImage)
-        MA.MP.paintWindow.image = resImage
-        imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage, tag = "resistance")
-        self.corners = MA.MP.paintWindow.bbox(imgRes)
         print("Se puso el resistor")    
-        print(type(imgRes))
+        #print(type(imgRes))
 
 
     def drag_start(self, event):
@@ -199,13 +203,24 @@ class Resistor(object):
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
 
     def phb(self, event):        
-        if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
-            print(event.x , event.y)
-            self.x+=1
-        if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
-            print("cr7")        
+        if self.vertical == False:
+            if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
+            #print(event.x , event.y)
+            #self.x+=1
+                print("max garro")
+            if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
+                print("cr7")        
+            else:
+                pass
         else:
-            pass
+            if event.x > self.corners[0] and event.x < self.corners[2] and event.y > self.corners[1] and event.y < self.corners[1] + 20:
+            #print(event.x , event.y)
+            #self.x+=1
+                print("matt garro")
+            if event.x > self.corners[0] and event.x < self.corners[2] and event.y < self.corners[3] and event.y > self.corners[3] - 20:
+                print("cr9")        
+            else:
+                pass
             
     def __init__(self, root, resistance, name, vertical):
         self.vertical = vertical
@@ -220,6 +235,7 @@ class Resistor(object):
         MA.MP.paintWindow.tag_bind("resistance", "<ButtonRelease-1>", self.drag_stop)
         MA.MP.paintWindow.tag_bind("resistance", "<B1-Motion>", self.drag)
         MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.phb)
+        #MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.nhb)
         self.show_res()
         
         #MA.MP.paintWindow.tag_bind("resistance", "<Button-1>", self.nhb)
@@ -273,10 +289,11 @@ class FuenteVoltaje():
 
     def phb(self, event):    
         if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
-            print(event.x , event.y)
-            self.x+=1
-        if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
-            print("cr7")        
+            #print(event.x , event.y)
+            #self.x+=1
+            print("cr34")
+        #if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
+            #print("cr7")        
         else:
             pass
     
@@ -288,7 +305,7 @@ class FuenteVoltaje():
         MA.MP.paintWindow.tag_bind("voltage", "<ButtonPress-1>", self.drag_start)
         MA.MP.paintWindow.tag_bind("voltage", "<ButtonRelease-1>", self.drag_stop)
         MA.MP.paintWindow.tag_bind("voltage", "<B1-Motion>", self.drag)
-        MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.phb)
+        MA.MP.paintWindow.tag_bind("voltage", "<Button-3>", self.phb)
         self.voltage = voltage
         self.name = name
         self.x = 50
