@@ -5,6 +5,7 @@ except ImportError:
 import os
 
 import random
+import Graph
 
 class DropDown():
     def simulate(self):
@@ -163,19 +164,51 @@ class Resistor(object):
             resImage = self.cargarimg('Res.png') #Resistencia horizontal
             MA.resImg.append(resImage)        
             MA.MP.paintWindow.image = resImage            
-            imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage, tag = "resistance") 
+            imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,500), image = resImage, tag = "resistance") 
             self.img = imgRes               
             self.corners = MA.MP.paintWindow.bbox(imgRes) 
         else:
             resImage2 = self.cargarimg('Res2.png') #Resistencia vertical
             MA.resImg.append(resImage2)
             MA.MP.paintWindow.image = resImage2
-            imgRes2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = resImage2, tag = "resistance")
+            imgRes2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,500), image = resImage2, tag = "resistance")
             self.img = imgRes2
             self.corners = MA.MP.paintWindow.bbox(imgRes2)     
         
         print("Se puso el resistor")    
         #print(type(imgRes))
+
+    def drawCable(self, side):
+        if MA.click == False:
+            if side == 'right':
+                MA.x1 = self.corners[2]
+                MA.y1 = self.corners[1] + 12
+            
+            elif side == 'left':
+                MA.x1 = self.corners[0]
+                MA.y1 = self.corners[1] + 12
+
+            elif side == 'top':
+                MA.x1 = self.corners[0] + 35
+                MA.y1 = self.corners[1]
+            
+            elif side == 'bottom':
+                MA.x1 = self.corners[0] + 35
+                MA.y1 = self.corners[3]
+
+        else:
+            if side == 'right':
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[2], self.corners[1] + 12) 
+            
+            elif side == 'left':
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0], self.corners[1] + 12) 
+            
+            elif side == 'top':
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] + 35, self.corners[3])
+
+            elif side == 'bottom':
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0], self.corners[1] + 12)  
+            
 
 
     def drag_start(self, event):
@@ -204,14 +237,18 @@ class Resistor(object):
         self._drag_data["y"] = event.y
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
 
-    def phb(self, event):        
+    def phb(self, event):
+
+
         if self.vertical == False:
             if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
             #print(event.x , event.y)
             #self.x+=1
                 print("max garro")
+                self.drawCable('right')
             if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
-                print("cr7")        
+                print("cr7")    
+                self.drawCable('left')    
             else:
                 pass
         else:
@@ -219,10 +256,17 @@ class Resistor(object):
             #print(event.x , event.y)
             #self.x+=1
                 print("matt garro")
+                self.drawCable('top')
             if event.x > self.corners[0] and event.x < self.corners[2] and event.y < self.corners[3] and event.y > self.corners[3] - 20:
-                print("cr9")        
+                print("cr9")  
+                self.drawCable('bottom')      
             else:
                 pass
+        
+        if MA.click == False:
+            MA.click = True
+        else:
+            MA.click = False
             
     def __init__(self, root, resistance, name, vertical):
         self.vertical = vertical
@@ -339,6 +383,7 @@ class FuenteVoltaje():
 class MainApplication():
     def __init__(self, parent):
         self.parent = parent
+        self.nodeCount = 0
         self.DD = DropDown(self.parent)
         self.MP = MainPanel(self.parent)
         self.MP.grid()
@@ -348,6 +393,8 @@ class MainApplication():
         self.volList = []  
         self.volImg = []  
         self.click = False
+        self.x1 = None
+        self.y1 = None
 
 if __name__ == "__main__":
     root = Tk()
