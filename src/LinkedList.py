@@ -19,8 +19,7 @@ class LinkedList(object):
 			else:
 				return "Nodo no está en lista"
 
- 
-	
+
 	def print_list(self):
 		if self.head == None:
 			return "Lista vacía"

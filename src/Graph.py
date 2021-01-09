@@ -42,6 +42,17 @@ class Node:
         for key, value in adj_nodes.items():
             print(key.get_name(), ' : ', value)
 
+    def get_adjacent_nodes_info(self):
+        adj_nodes = self.get_adjacent_nodes()
+        for key, value in adj_nodes.items():
+            return key.get_name() + " " + str(value)
+
+
+    def get_electric_component(self):
+        return self.electric_component
+
+
+
 class Graph:
     def __init__(self):
 
@@ -166,6 +177,8 @@ class CircuitExample:
         print("Vista desde el grafo")
         circuitGraph.print_graph_nodes()
 
+
+
 #C1 = CircuitExample()
 class ElectricCircuit:
     def __init__(self):
@@ -191,8 +204,6 @@ class ElectricCircuit:
             if component2 in graph_nodes:
                 component1.add_destination(component2, 0)
 
-
-        
     def search_ref_conn(self, element_name):
         nodes = self.graph_circuit.get_nodes()
         target = Node("target")
@@ -209,10 +220,17 @@ class ElectricCircuit:
                 print("node name: ", node.get_name())
                 node.print_adjacent_nodes()
                 
-            
         print("visto desde el grafo:")
         self.graph_circuit.print_graph_nodes()
 
+    def get_graph(self):
+        return self.graph_circuit
+    
+
+    def print_graph(self):
+        self.graph_circuit.print_graph_nodes()
+    
+"""
 R1  = Resistor("R1", 100)
 R2  = Resistor("R2", 200)
 R3  = Resistor("R3", 300)
@@ -236,7 +254,8 @@ EC1.connect_components(V1, R4)
 EC1.connect_components(R4, EC1.search_ref_conn(V0.get_name()))
 EC1.connect_components(R3, EC1.search_ref_conn(V0.get_name()))
 EC1.connect_components(R2, V0)
-EC1.print_info() 
+
+EC1.print_info()
 print("Adjacentes de resistencias: ")
 print("R1->")
 R1.print_adjacent_nodes()
@@ -251,7 +270,7 @@ V0.print_adjacent_nodes()
 print("V1->")
 V1.print_adjacent_nodes()
 
-
+"""
         
 
 
