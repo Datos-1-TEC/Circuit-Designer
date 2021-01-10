@@ -1,17 +1,22 @@
 from LinkedList import LinkedList
 import sys
+import random
 
 
 class Node:
     def __init__(self,name):
         self.name = name 
         self.shortesPath = LinkedList()
+        self.current = random.randint(1, 5)
+        self.voltage = random.randint(1, 2)
         self.distance = sys.maxsize
         self.adjacentNodes = {}
 
     def add_destination(self,destination,distance):
         self.distance = distance
         self.adjacentNodes[destination] = self.distance
+        if self.distance != 0:
+            destination.set_voltage(destination.get_current()*self.distance)
 
     def get_name(self):
         return self.name
@@ -21,10 +26,15 @@ class Node:
 
     def get_shortest_path(self):
         return self.shortesPath
-
+    def get_voltage(self):
+        return self.voltage
+    def get_current(self):
+        return self.current   
     def set_shortest_path(self,shortest_path):
         self.shortesPath = shortest_path
-    
+    def set_voltage(self, voltage):
+        self.voltage = voltage
+
     def get_distance(self):
         return self.distance
 
@@ -40,7 +50,7 @@ class Node:
     def print_adjacent_nodes(self):
         adj_nodes = self.get_adjacent_nodes()
         for key, value in adj_nodes.items():
-            print(key.get_name(), ' : ', value)
+            print(key.get_name(), ' : ', value, "V: ", key.get_voltage())
 
     def get_adjacent_nodes_info(self):
         adj_nodes = self.get_adjacent_nodes()
@@ -79,11 +89,12 @@ class Graph:
     def print_graph_nodes(self):
         printedSet = []
         for x in self.nodes:
-            print(x.get_name(), ";", x.get_distance())
-            print("My adj: ")
+            
+            print("My node: " + x.get_name())
+                
+            print("nodos adyacentes: ")
             x.print_adjacent_nodes()
-            printedSet += [x.get_name()]
-        print(printedSet)
+             
 
 class Resistor(Node):
     def __init__(self, name, val): 
@@ -186,23 +197,28 @@ class ElectricCircuit:
 
     def create_resistor_link(self, resistor, connection_name):
         connection = Node(connection_name)
-        connection.add_destination(resistor, resistor.get_val())
+        resistor.add_destination(connection, resistor.get_val())
         self.graph_circuit.addNode(connection)
     
     def create_voltage_link(self, voltage, connection_name):
         connection = Node(connection_name)
-        connection.add_destination(voltage, 0)
+        voltage.add_destination(connection, 0)
         self.graph_circuit.addNode(connection)
 
     def connect_components(self, component1, component2):
         graph_nodes = self.graph_circuit.get_nodes()  
+        connection1 = self.search_connection(component1)
+        connection2 = self.search_connection(component2)
 
-        for node in graph_nodes:
-            for adjNode in node.get_adjacent_nodes():
-                if adjNode.get_name() == component2.get_name():
-                    component1.add_destination(component2, 0)
-            if component2 in graph_nodes:
-                component1.add_destination(component2, 0)
+        if isinstance(component2, Resistor):
+            connection1.add_destination(connection2, component2.get_val())
+        else:
+            connection1.add_destination(connection2, 0)
+
+    def search_connection(self, component):
+        nodes_dict = component.get_adjacent_nodes()
+        for node, weight in nodes_dict.items():
+            return node
 
     def search_ref_conn(self, element_name):
         nodes = self.graph_circuit.get_nodes()
@@ -214,14 +230,16 @@ class ElectricCircuit:
         return target
 
     def print_info(self):
-        print("visto desde los nodos conexion:")
+        print("visto desde el grafo:")
+        self.graph_circuit.print_graph_nodes()
+
+        """  print("visto desde los nodos conexion:")
         for node in self.graph_circuit.get_nodes():
             if node != None:
                 print("node name: ", node.get_name())
                 node.print_adjacent_nodes()
-                
-        print("visto desde el grafo:")
-        self.graph_circuit.print_graph_nodes()
+                 """
+        
 
     def get_graph(self):
         return self.graph_circuit
@@ -230,7 +248,7 @@ class ElectricCircuit:
     def print_graph(self):
         self.graph_circuit.print_graph_nodes()
     
-"""
+
 R1  = Resistor("R1", 100)
 R2  = Resistor("R2", 200)
 R3  = Resistor("R3", 300)
@@ -248,29 +266,15 @@ EC1.create_voltage_link(V0, "C5")
 
 EC1.connect_components(V0, V1)
 EC1.connect_components(V1, R1)
+EC1.connect_components(V1, R4)
 EC1.connect_components(R1, R2)
 EC1.connect_components(R1, R3)
-EC1.connect_components(V1, R4)
-EC1.connect_components(R4, EC1.search_ref_conn(V0.get_name()))
-EC1.connect_components(R3, EC1.search_ref_conn(V0.get_name()))
+EC1.connect_components(R4, V0)
+EC1.connect_components(R3, V0)
 EC1.connect_components(R2, V0)
 
 EC1.print_info()
-print("Adjacentes de resistencias: ")
-print("R1->")
-R1.print_adjacent_nodes()
-print("R2->")
-R2.print_adjacent_nodes()
-print("R3->")
-R3.print_adjacent_nodes()
-print("R4->")
-R4.print_adjacent_nodes()  
-print("V0->")
-V0.print_adjacent_nodes()
-print("V1->")
-V1.print_adjacent_nodes()
 
-"""
         
 
 
