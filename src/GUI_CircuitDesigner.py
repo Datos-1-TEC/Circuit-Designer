@@ -5,7 +5,8 @@ except ImportError:
 import os
 
 import random
-import Graph
+from Graph import *
+from ElectricCircuit import *
 
 class DropDown():
     def simulate(self):
@@ -37,7 +38,7 @@ class MainPanel(Canvas):
         self.w = 800       
         self.h = 600
 
-class popupWindow(object):
+class popupWindow():
     def __init__(self,master):
         top = self.top = Toplevel(master)
         self.l = Label(top,text="Inserte un nombre para la resistencia")
@@ -116,9 +117,20 @@ class SideBar():
         self.root.wait_window(self.w.top)
         self.resBut["state"] = "normal"
 
+    def get_connection_name(self):
+        name = 'C' + str(self.nodeConnectionCounter)
+        self.nodeConnectionCounter += 1
+
+        return name
+
+
+
     def createResistor(self, value, name, vertical):       
-        Res1 = Resistor(self.root, value, name, vertical)
+        Res1 = ResistorGUI(self.root, value, name, vertical)
+        # Se llama al metodo ElectricCircuit.create_resistor_link pasando como parametros Res1.resistorNode y self.connectionName
+        MA.ElectricCircuit.create_resistor_link(Res1.resistorNode, self.get_connection_name())
         MA.resList.append(Res1)
+        self.allElements.append(Res1)
         print(Res1.name)
         print(Res1.resistance)
 
@@ -129,8 +141,10 @@ class SideBar():
         self.volBut["state"] = "normal"
 
     def createFuenteVoltaje(self, value, name, vertical):       
-        Vol1 = FuenteVoltaje(self.root, value, name, vertical)
+        Vol1 = FuenteVoltajeGUI(self.root, value, name, vertical)
+        MA.ElectricCircuit.create_voltage_link(Vol1.voltageNode, self.get_connection_name())
         MA.volList.append(Vol1)
+        self.allElements.append(Vol1)
         print(Vol1.name)
         print(Vol1.voltage)    
 
@@ -141,6 +155,8 @@ class SideBar():
         MA.volList.clear()
         MA.MP.paintWindow.delete("resistance")
         MA.MP.paintWindow.delete("voltage")
+        MA.MP.paintWindow.delete("cable")
+        
        
 
     def __init__(self, root):
@@ -149,11 +165,13 @@ class SideBar():
         self.window.pack(side = RIGHT, fill = Y)
         self.label = Label(self.root, text = "")
         self.label.pack(pady = 20)
+        self.allElements = []
+        self.nodeConnectionCounter = 0
         self.createImageButtons()
         self.x = 50
         self.y = 50
 
-class Resistor(object):
+class ResistorGUI():
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
         imagen = PhotoImage(file = ruta)
@@ -183,32 +201,41 @@ class Resistor(object):
             if side == 'right':
                 MA.x1 = self.corners[2]
                 MA.y1 = self.corners[1] + 12
+                MA.component1 = self.resistorNode
+
             
             elif side == 'left':
                 MA.x1 = self.corners[0]
                 MA.y1 = self.corners[1] + 12
+                MA.component1 = self.resistorNode
+
 
             elif side == 'top':
                 MA.x1 = self.corners[0] + 12
                 MA.y1 = self.corners[1]
+                MA.component1 = self.resistorNode
             
             elif side == 'bottom':
                 MA.x1 = self.corners[0] + 12
                 MA.y1 = self.corners[3]
+                MA.component1 = self.resistorNode
 
         else:
             if side == 'right':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[2], self.corners[1] + 12) 
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, tag ="cable")
+                MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode) 
             
             elif side == 'left':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0], self.corners[1] + 12) 
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, tag ="cable") 
+                MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
             
             elif side == 'top':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] + 12, self.corners[1])
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] + 12, self.corners[1] , tag ="cable")
+                MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
 
             elif side == 'bottom':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] +12, self.corners[3])  
-            
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] +12, self.corners[3] , tag ="cable")  
+                MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
 
 
     def drag_start(self, event):
@@ -291,21 +318,15 @@ class Resistor(object):
         self.y = 50
         self.img = None
         self.corners = None
+        self.resistorNode = Resistor(self.name, self.resistance)
+        #self.negNode = Graph.Node()
         self.show_res()
         MA.MP.paintWindow.tag_bind(self.img, "<ButtonPress-1>", self.drag_start)
         MA.MP.paintWindow.tag_bind(self.img, "<ButtonRelease-1>", self.drag_stop)
         MA.MP.paintWindow.tag_bind(self.img, "<B1-Motion>", self.drag)
         MA.MP.paintWindow.tag_bind(self.img, "<Button-3>", self.phb)
-        #MA.MP.paintWindow.tag_bind("resistance", "<Button-3>", self.nhb)
         
-        
-        #MA.MP.paintWindow.tag_bind("resistance", "<Button-1>", self.nhb)
-        #MA.MP.paintWindow.bind('<B1-Motion>', self.move)
-        
-
-        
-
-class FuenteVoltaje():
+class FuenteVoltajeGUI():
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
         imagen = PhotoImage(file = ruta)
@@ -385,15 +406,15 @@ class FuenteVoltaje():
         self.img = None
         self.corners = None
         self._drag_data = {"x": 0, "y": 0, "item": None}
+        self.voltageNode = Voltage(self.name, self.voltage)
         self.show_vol()
         MA.MP.paintWindow.tag_bind(self.img, "<ButtonPress-1>", self.drag_start)
         MA.MP.paintWindow.tag_bind(self.img, "<ButtonRelease-1>", self.drag_stop)
         MA.MP.paintWindow.tag_bind(self.img, "<B1-Motion>", self.drag)
         MA.MP.paintWindow.tag_bind(self.img, "<Button-3>", self.phb)
         
-        #MA.MP.paintWindow.bind('<B1-Motion>', self.move)
-
 class MainApplication():
+
     def __init__(self, parent):
         self.parent = parent
         self.nodeCount = 0
@@ -408,6 +429,9 @@ class MainApplication():
         self.click = False
         self.x1 = None
         self.y1 = None
+        self.component1 = None
+        self.ElectricCircuit = ElectricCircuit()
+        
 
 if __name__ == "__main__":
     root = Tk()
