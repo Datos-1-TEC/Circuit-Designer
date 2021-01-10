@@ -12,7 +12,7 @@ class Dijkstra:
 
         self.unsettledNodes.add(source)
         while(len(self.unsettledNodes)!=0):
-            adjacencyPair = {}
+            adjacencyPair = {} #EN LUGAR DE METER NODO:PESO >>>> NODO: VOLTAJE
             #currentNode = Node("")
             currentNode = self.getLowestDistanceNode(self.unsettledNodes)
             self.unsettledNodes.remove(currentNode)
@@ -41,6 +41,7 @@ class Dijkstra:
 
     def calculateMinimumDistance(self, evaluationNode, edgeWeight, sourceNode):
         sourceDistance = sourceNode.get_distance()
+        #SUMAR VOLTAJES DE SOURCE MAS VOLTAJE ADYACENTE
         if sourceDistance + edgeWeight < evaluationNode.get_distance():
             evaluationNode.set_distance(sourceNode + edgeWeight)
             shortestPath = sourceNode.get_shortest_path()
