@@ -350,6 +350,47 @@ class FuenteVoltajeGUI():
         
         print("Se puso la fuente de voltaje")
 
+    def drawCable(self, side):
+        if MA.click == False:
+            if side == 'right':
+                MA.x1 = self.corners[2]
+                MA.y1 = self.corners[1] + 12
+                MA.component1 = self.voltageNode
+
+            
+            elif side == 'left':
+                MA.x1 = self.corners[0]
+                MA.y1 = self.corners[1] + 12
+                MA.component1 = self.voltageNode
+
+
+            elif side == 'top':
+                MA.x1 = self.corners[0] + 12
+                MA.y1 = self.corners[1]
+                MA.component1 = self.voltageNode
+            
+            elif side == 'bottom':
+                MA.x1 = self.corners[0] + 12
+                MA.y1 = self.corners[3]
+                MA.component1 = self.voltageNode
+
+        else:
+            if side == 'right':
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, tag ="cable")
+                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode) 
+            
+            elif side == 'left':
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, tag ="cable") 
+                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+            
+            elif side == 'top':
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] + 12, self.corners[1] , tag ="cable")
+                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+
+            elif side == 'bottom':
+                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] +12, self.corners[3] , tag ="cable")  
+                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+
     def drag_start(self, event):
         """Begining drag of an object"""
         # record the item and its location
@@ -382,19 +423,41 @@ class FuenteVoltajeGUI():
             #print(event.x , event.y)
             #self.x+=1
                 print("max garro")
+                self.drawCable('left')
+
+                if MA.click == False:
+                    MA.click = True
+                else:
+                    MA.click = False
+
             if event.x < self.corners[2] and event.x > self.corners[2] - 15 and event.y > self.corners[1] and event.y < self.corners[3]:
                 print("cr7")        
-            else:
-                pass
+                self.drawCable('right')  
+
+                if MA.click == False:
+                    MA.click = True
+                else:
+                    MA.click = False
         else:
             if event.x > self.corners[0] and event.x < self.corners[2] and event.y > self.corners[1] and event.y < self.corners[1] + 15:
             #print(event.x , event.y)
             #self.x+=1
                 print("matt garro")
+                self.drawCable('top')
+
+                if MA.click == False:
+                    MA.click = True
+                else:
+                    MA.click = False
+                    
             if event.x > self.corners[0] and event.x < self.corners[2] and event.y < self.corners[3] and event.y > self.corners[3] - 15:
                 print("cr9")        
-            else:
-                pass
+                self.drawCable('bottom')      
+
+                if MA.click == False:
+                    MA.click = True
+                else:
+                    MA.click = False
     
     def __init__(self, root, voltage, name, vertical):
         self.vertical = vertical
