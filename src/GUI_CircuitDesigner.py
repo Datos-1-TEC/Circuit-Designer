@@ -189,6 +189,8 @@ class ResistorGUI():
             self.corners = MA.MP.paintWindow.bbox(imgRes)             
             l = Label(MA.MP.paintWindow, text = self.name)
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
+            lv = Label(MA.MP.paintWindow, text = self.resistance)
+            self.resistancelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         else:
             resImage2 = self.cargarimg('Res2.png') #Resistencia vertical
             MA.resImg.append(resImage2)
@@ -198,7 +200,8 @@ class ResistorGUI():
             self.corners = MA.MP.paintWindow.bbox(imgRes2)   
             l = Label(MA.MP.paintWindow, text = self.name)  
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
-           
+            lv = Label(MA.MP.paintWindow, text = self.resistance)
+            self.resistancelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         
         print("Se puso el resistor")    
         #print(type(imgRes))
@@ -272,6 +275,9 @@ class ResistorGUI():
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
         print(self._drag_data["item"])
         MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
+        MA.MP.paintWindow.coords(self.resistancelabel, self.corners[0], self.corners[1])
+
+
 
     def phb(self, event):
 
@@ -328,6 +334,7 @@ class ResistorGUI():
         self.img = None
         self.corners = None
         self.namelabel = None
+        self.resistancelabel = None
         self.resistorNode = Resistor(self.name, self.resistance)
         #self.negNode = Graph.Node()
         self.show_res()
@@ -430,7 +437,7 @@ class FuenteVoltajeGUI():
         self._drag_data["y"] = event.y
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
         MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
-        
+
     def phb(self, event):        
         if self.vertical == False:
             if event.x > self.corners[0] and event.x < self.corners[0] + 15 and event.y > self.corners[1] and event.y < self.corners[3]:
