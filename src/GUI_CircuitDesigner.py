@@ -359,6 +359,8 @@ class FuenteVoltajeGUI():
             self.corners = MA.MP.paintWindow.bbox(imgVol)
             l = Label(MA.MP.paintWindow, text = self.name)
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
+            lv = Label(MA.MP.paintWindow, text = self.voltage)
+            self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         else:
             volImage2 = self.cargarimg('FuenteVoltaje2.png')            
             MA.volImg.append(volImage2)
@@ -368,6 +370,8 @@ class FuenteVoltajeGUI():
             self.corners = MA.MP.paintWindow.bbox(imgVol2)
             l = Label(MA.MP.paintWindow, text = self.name)  
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
+            lv = Label(MA.MP.paintWindow, text = self.voltage)
+            self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         print("Se puso la fuente de voltaje")
 
     def drawCable(self, side):
@@ -437,6 +441,8 @@ class FuenteVoltajeGUI():
         self._drag_data["y"] = event.y
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
         MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
+        MA.MP.paintWindow.coords(self.voltagelabel, self.corners[0], self.corners[1])
+
 
     def phb(self, event):        
         if self.vertical == False:
@@ -490,6 +496,7 @@ class FuenteVoltajeGUI():
         self.img = None
         self.corners = None
         self.namelabel = None
+        self.voltagelabel = None
         self._drag_data = {"x": 0, "y": 0, "item": None}
         self.voltageNode = Voltage(self.name, self.voltage)
         self.show_vol()
