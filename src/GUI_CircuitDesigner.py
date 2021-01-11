@@ -196,7 +196,8 @@ class ResistorGUI():
             imgRes2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,500), image = resImage2, tag = "resistance")
             self.img = imgRes2
             self.corners = MA.MP.paintWindow.bbox(imgRes2)   
-            self.namelabel = Label(MA.MP.paintWindow, text = self.name)  
+            l = Label(MA.MP.paintWindow, text = self.name)  
+            self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
            
         
         print("Se puso el resistor")    
@@ -349,6 +350,8 @@ class FuenteVoltajeGUI():
             imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
             self.img = imgVol
             self.corners = MA.MP.paintWindow.bbox(imgVol)
+            l = Label(MA.MP.paintWindow, text = self.name)
+            self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
         else:
             volImage2 = self.cargarimg('FuenteVoltaje2.png')            
             MA.volImg.append(volImage2)
@@ -356,7 +359,8 @@ class FuenteVoltajeGUI():
             imgVol2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage2, tag = "voltage")
             self.img = imgVol2
             self.corners = MA.MP.paintWindow.bbox(imgVol2)
-        
+            l = Label(MA.MP.paintWindow, text = self.name)  
+            self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
         print("Se puso la fuente de voltaje")
 
     def drawCable(self, side):
@@ -425,7 +429,8 @@ class FuenteVoltajeGUI():
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
-
+        MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
+        
     def phb(self, event):        
         if self.vertical == False:
             if event.x > self.corners[0] and event.x < self.corners[0] + 15 and event.y > self.corners[1] and event.y < self.corners[3]:
@@ -477,6 +482,7 @@ class FuenteVoltajeGUI():
         self.y = 50
         self.img = None
         self.corners = None
+        self.namelabel = None
         self._drag_data = {"x": 0, "y": 0, "item": None}
         self.voltageNode = Voltage(self.name, self.voltage)
         self.show_vol()
