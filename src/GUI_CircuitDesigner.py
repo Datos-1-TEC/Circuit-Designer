@@ -187,8 +187,8 @@ class ResistorGUI():
             imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,500), image = resImage, tag = "resistance") 
             self.img = imgRes               
             self.corners = MA.MP.paintWindow.bbox(imgRes)             
-            self.namelabel = Label(MA.MP.paintWindow, text = self.name)
-            MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = self.namelabel, anchor = SW, tag = "label")
+            l = Label(MA.MP.paintWindow, text = self.name)
+            self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
         else:
             resImage2 = self.cargarimg('Res2.png') #Resistencia vertical
             MA.resImg.append(resImage2)
@@ -269,7 +269,8 @@ class ResistorGUI():
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
-        MA.MP.paintWindow.move(self.namelabel, delta_x, delta_y)
+        print(self._drag_data["item"])
+        MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
 
     def phb(self, event):
 
