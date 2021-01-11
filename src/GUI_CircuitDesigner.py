@@ -45,7 +45,7 @@ class popupWindow():
         self.l.pack()
         self.e = Entry(top)
         self.e.pack()
-        self.l2 = Label(top,text="Inserte un valor para la resistencia")
+        self.l2 = Label(top,text="Inserte un valor para la resistencia" + "(\u03A9)")
         self.l2.pack()
         self.e2 = Entry(top)
         self.e2.pack()
@@ -74,7 +74,7 @@ class popupWindowVol(object):
         self.l3.pack()
         self.e3 = Entry(top)
         self.e3.pack()
-        self.l4 = Label(top,text="Inserte un valor para la fuente de voltaje")
+        self.l4 = Label(top,text="Inserte un valor para la fuente de voltaje" + "(V)")
         self.l4.pack()
         self.e4 = Entry(top)
         self.e4.pack()
@@ -187,10 +187,10 @@ class ResistorGUI():
             imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,500), image = resImage, tag = "resistance") 
             self.img = imgRes               
             self.corners = MA.MP.paintWindow.bbox(imgRes)             
-            l = Label(MA.MP.paintWindow, text = self.name)
+            l = Label(MA.MP.paintWindow, text = self.name + "\n" + self.resistance + '\u03A9')
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
-            lv = Label(MA.MP.paintWindow, text = self.resistance)
-            self.resistancelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
+            #lv = Label(MA.MP.paintWindow, text = self.resistance)
+            #self.resistancelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = NW, tag = "label")
         else:
             resImage2 = self.cargarimg('Res2.png') #Resistencia vertical
             MA.resImg.append(resImage2)
@@ -198,10 +198,10 @@ class ResistorGUI():
             imgRes2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,500), image = resImage2, tag = "resistance")
             self.img = imgRes2
             self.corners = MA.MP.paintWindow.bbox(imgRes2)   
-            l = Label(MA.MP.paintWindow, text = self.name)  
+            l = Label(MA.MP.paintWindow, text = self.name + "\n" + self.resistance + '\u03A9')  
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
-            lv = Label(MA.MP.paintWindow, text = self.resistance)
-            self.resistancelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
+            #lv = Label(MA.MP.paintWindow, text = self.resistance)
+            #self.resistancelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         
         print("Se puso el resistor")    
         #print(type(imgRes))
@@ -273,9 +273,9 @@ class ResistorGUI():
         self._drag_data["x"] = event.x
         self._drag_data["y"] = event.y
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
-        print(self._drag_data["item"])
+        #print(self._drag_data["item"])
         MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
-        MA.MP.paintWindow.coords(self.resistancelabel, self.corners[0], self.corners[1])
+        #MA.MP.paintWindow.coords(self.resistancelabel, self.corners[0], self.corners[1])
 
 
 
@@ -357,10 +357,10 @@ class FuenteVoltajeGUI():
             imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
             self.img = imgVol
             self.corners = MA.MP.paintWindow.bbox(imgVol)
-            l = Label(MA.MP.paintWindow, text = self.name)
+            l = Label(MA.MP.paintWindow, text = self.name + "\n" + self.voltage + "V")
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
-            lv = Label(MA.MP.paintWindow, text = self.voltage)
-            self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
+            #lv = Label(MA.MP.paintWindow, text = self.voltage)
+            #self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         else:
             volImage2 = self.cargarimg('FuenteVoltaje2.png')            
             MA.volImg.append(volImage2)
@@ -368,10 +368,10 @@ class FuenteVoltajeGUI():
             imgVol2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage2, tag = "voltage")
             self.img = imgVol2
             self.corners = MA.MP.paintWindow.bbox(imgVol2)
-            l = Label(MA.MP.paintWindow, text = self.name)  
+            l = Label(MA.MP.paintWindow, text = self.name + "\n" + self.voltage + "V")  
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
-            lv = Label(MA.MP.paintWindow, text = self.voltage)
-            self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
+            #lv = Label(MA.MP.paintWindow, text = self.voltage)
+            #self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         print("Se puso la fuente de voltaje")
 
     def drawCable(self, side):
