@@ -7,6 +7,7 @@ import os
 import random
 from Graph import *
 from ElectricCircuit import *
+from CanvasToolTip import *
 
 class DropDown():
     def simulate(self):
@@ -175,8 +176,9 @@ class SideBar():
 
 class Cable():
     def drawCable(self, x1, y1, x2, y2):
-        MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable")
-    
+        cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable")
+        CanvasTooltip(MA.MP.paintWindow, cable, text = 'V = ' + str(self.voltage) + '/n I = '+str(self.current))
+        print('V = ' + str(self.voltage) + '/n I = '+str(self.current))
     def __init__(self, root, x1, y1, x2, y2, component1, component2):
         self.root = root
         self.x1 = x1
@@ -185,6 +187,8 @@ class Cable():
         self.y2 = y2
         self.component1 = component1
         self.component2 = component2
+        self.voltage = MA.ElectricCircuit.search_connection(self.component1).get_voltage()
+        self.current = MA.ElectricCircuit.search_connection(self.component1).get_current()
         self.drawCable(self.x1, self.y1, self.x2, self.y2)
     
 
