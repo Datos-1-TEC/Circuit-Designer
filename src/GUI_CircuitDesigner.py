@@ -8,10 +8,19 @@ import random
 from Graph import *
 from ElectricCircuit import *
 from CanvasToolTip import *
+from NetlistExporter import * 
+
 
 class DropDown():
     def simulate(self):
         print("Simulando...")
+
+    def generate_netlist(self):
+       netlist_dict =  MA.ElectricCircuit.get_connections_for_netlist()
+       print("Print from menu ")
+       print(netlist_dict)
+       netlist_generator = NetlistExporter(netlist_dict)
+       netlist_generator.create_netlist_file()
 
     def __init__(self, root):
         self.root = root
@@ -20,6 +29,7 @@ class DropDown():
         dd["menu"] = dd.menu
 
         dd.menu.add_command(label = "Simular", command = self.simulate)
+        dd.menu.add_command(label = "Export Netlist",command = self.generate_netlist)
         dd.pack(fill = BOTH)
 
 class MainPanel(Canvas):
@@ -419,19 +429,19 @@ class FuenteVoltajeGUI():
 
         else:
             if side == 'right':
-                Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 35, MA.component1, self.resistorNode)
+                Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 35, MA.component1, self.voltageNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode) 
             
             elif side == 'left':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 35, MA.component1, self.resistorNode)
+                Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 35, MA.component1, self.voltageNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
             
             elif side == 'top':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[1], MA.component1, self.resistorNode)
+                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[1], MA.component1, self.voltageNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
 
             elif side == 'bottom':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[3], MA.component1, self.resistorNode)
+                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[3], MA.component1, self.voltageNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
 
     def drag_start(self, event):

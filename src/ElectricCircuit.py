@@ -19,7 +19,8 @@ class ElectricCircuit:
             Searches for the component's link 
         """
     def __init__(self):
-        self.graph_circuit = Graph()     
+        self.graph_circuit = Graph() 
+        self.connections_for_netlist = {}      
 
     def create_resistor_link(self, resistor, connection_name):
         """ Adds a destination Node to the resistor which will be used to make connections in the circuit
@@ -59,9 +60,14 @@ class ElectricCircuit:
         if isinstance(component2, Resistor):
             connection1.add_destination(connection2, component2.get_val())
             print('Se conectaron' + component1.get_name(), component2.get_name())
+            self.connections_for_netlist[component1.get_name()] = component2.get_name(),component2.get_val(), component1.get_val()
+            print(self.connections_for_netlist)
             
         else:
             connection1.add_destination(connection2, 0)
+            self.connections_for_netlist[component1.get_name()] = component2.get_name(),component2.get_val(),component1.get_val()
+            print(self.connections_for_netlist)
+
 
     def search_connection(self, component):
         """ Searches for the component's link
@@ -82,6 +88,9 @@ class ElectricCircuit:
     
     def print_graph(self):
         self.graph_circuit.print_graph_nodes()
+
+    def get_connections_for_netlist(self):
+        return self.connections_for_netlist
     
 class Resistor(Node):
     """ A class used to represent a resistor component of the circuit
