@@ -173,6 +173,21 @@ class SideBar():
         self.x = 50
         self.y = 50
 
+class Cable():
+    def drawCable(self, x1, y1, x2, y2):
+        MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable")
+    
+    def __init__(self, root, x1, y1, x2, y2, component1, component2):
+        self.root = root
+        self.x1 = x1
+        self.y1 = y1
+        self.x2 = x2
+        self.y2 = y2
+        self.component1 = component1
+        self.component2 = component2
+        self.drawCable(self.x1, self.y1, self.x2, self.y2)
+    
+
 class ResistorGUI():
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
@@ -232,19 +247,19 @@ class ResistorGUI():
 
         else:
             if side == 'right':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, tag ="cable")
+                Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode) 
             
             elif side == 'left':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, tag ="cable") 
+                Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
             
             elif side == 'top':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] + 12, self.corners[1] , tag ="cable")
+                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 12, self.corners[1], MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
 
             elif side == 'bottom':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] +12, self.corners[3] , tag ="cable")  
+                Cable(self.root, MA.x1, MA.y1, self.corners[0] +12, self.corners[3], MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
 
 
@@ -400,19 +415,19 @@ class FuenteVoltajeGUI():
 
         else:
             if side == 'right':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[2], self.corners[1] + 35, tag ="cable")
+                Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 35, MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode) 
             
             elif side == 'left':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0], self.corners[1] + 35, tag ="cable") 
+                Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 35, MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
             
             elif side == 'top':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] + 35, self.corners[1] , tag ="cable")
+                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[1], MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
 
             elif side == 'bottom':
-                MA.MP.paintWindow.create_line(MA.x1, MA.y1, self.corners[0] + 35, self.corners[3] , tag ="cable")  
+                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[3], MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
 
     def drag_start(self, event):
