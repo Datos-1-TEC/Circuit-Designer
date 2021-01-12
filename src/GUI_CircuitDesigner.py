@@ -176,9 +176,9 @@ class SideBar():
 
 class Cable():
     def drawCable(self, x1, y1, x2, y2):
-        cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable")
-        CanvasTooltip(MA.MP.paintWindow, cable, text = 'V = ' + str(self.voltage) + '/n I = '+str(self.current))
-        print('V = ' + str(self.voltage) + '/n I = '+str(self.current))
+        cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable", width = 5)
+        CanvasTooltip(MA.MP.paintWindow, cable, text = 'V = ' + str(self.voltage) +  '\n' + 'I = ' + str(self.current))
+        print('V = ' + str(self.voltage) + '\n' + 'I = ' + str(self.current))
     def __init__(self, root, x1, y1, x2, y2, component1, component2):
         self.root = root
         self.x1 = x1
@@ -460,7 +460,7 @@ class FuenteVoltajeGUI():
         self._drag_data["y"] = event.y
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
         MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
-        MA.MP.paintWindow.coords(self.voltagelabel, self.corners[0], self.corners[1])
+        #MA.MP.paintWindow.coords(self.voltagelabel, self.corners[0], self.corners[1])
 
 
     def phb(self, event):        
