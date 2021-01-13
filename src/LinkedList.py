@@ -3,23 +3,24 @@ class Node(object):
 	def __init__(self, data):
 		self.data = data
 		self.next = None
+	
+	def get_data(self):
+		return self.data
+
+	def set_data(self, data):
+		self.data = data
+	
+	def get_next(self):
+		return self.next
+	def set_next(self, next):
+		self.next = next
 
 class LinkedList(object):
 	def __init__(self, head=None):
 		self.head = head
-
-	#ubicación del nodo
-	def search(self, head, data, index):
-		if head.data == data:
-			print (index)
-		else:
-			
-			if head.next:
-				return self.search(head.next, data, index+1)
-			else:
-				return "Nodo no está en lista"
-
-
+		self.tail = None
+		self.size = 0
+		
 	def print_list(self):
 		if self.head == None:
 			return "Lista vacía"
@@ -30,18 +31,24 @@ class LinkedList(object):
 			current = current.next
 		print ('\n')
 
+	def get_head(self):
+		return self.head
 
-	def size(self):
+	def get_tail(self):
+		ref = self.head
+		while ref.get_next() != None:
+			ref = ref.get_next()
+		self.tail = ref
+		return self.tail
+
+	def get_size(self):
 		if self.head == None:
 			return 0
-
-		size = 0
 		current = self.head
-		while(current):
-			size += 1
+		while(current != None):
+			self.size += 1
 			current = current.next
-
-		return size
+		return self.size
 
 
 	def insert(self, data):
@@ -62,6 +69,17 @@ class LinkedList(object):
 		while (last.next): 
 			last = last.next
 		last.next =  new_node
+		
+	def index(self, i):
+		current = self.head
+		cont = 0
+		while current.next != None:
+			if i == cont:
+				return current
+			else:
+				current = current.next
+				cont += 1
+
 
 	def delete(self, data):
 		if not self.head:
@@ -71,27 +89,14 @@ class LinkedList(object):
 		
 		if self.head.data == data:
 			head = temp.next
-			print ("Se borró " + str(head.data))
+			print ("Se borró: " , head.data)
 			return
 
 		while(temp.next):
 			if (temp.next.data == data):
-				print ("Borrado" + str(temp.next.data))
+				print ("Borrado: ", temp.next.data)
 				temp.next = temp.next.next
-				return
+				return 
 			temp = temp.next
 		print ("No se encontró nodo")
 		return
-
-
-
-"""
-shortestPath = LinkedList()
-shortestPath.append("a")
-shortestPath.append("b")
-shortestPath.append("c")
-shortestPath.append("d")
-shortestPath.append("e")
-shortestPath.append("f")
-shortestPath.print_list()
-"""
