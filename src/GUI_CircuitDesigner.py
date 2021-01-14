@@ -8,7 +8,9 @@ import random
 from Graph import *
 from ElectricCircuit import *
 from CanvasToolTip import *
-from NetlistExporter import * 
+from NetlistExporter import *
+from tkinter import filedialog 
+
 
 
 class DropDown():
@@ -22,6 +24,13 @@ class DropDown():
        netlist_generator = NetlistExporter(netlist_dict)
        netlist_generator.create_netlist_file()
 
+    def import_netlist(self):
+        print("Import netlist file")
+        netlist_file = filedialog.askopenfile(filetypes = (("Netlist Files", "*.txt")
+                                                         ,("All files", "*.*") ))
+        print(netlist_file)
+
+
     def __init__(self, root):
         self.root = root
         dd = Menubutton(self.root, text = "Menu", anchor=W)
@@ -29,7 +38,9 @@ class DropDown():
         dd["menu"] = dd.menu
 
         dd.menu.add_command(label = "Simular", command = self.simulate)
-        dd.menu.add_command(label = "Export Netlist",command = self.generate_netlist)
+        dd.menu.add_command(label = "Export Netlist File",command = self.generate_netlist)
+        dd.menu.add_command(label = "Import Netlist File",command = self.import_netlist)
+
         dd.pack(fill = BOTH)
 
 class MainPanel(Canvas):
