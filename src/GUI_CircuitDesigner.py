@@ -10,12 +10,22 @@ from ElectricCircuit import *
 from CanvasToolTip import *
 from NetlistExporter import *
 from tkinter import filedialog 
+Simulating = False
 
 
 
 class DropDown():
     def simulate(self):
+        global Simulating
+        Simulating = True
+        MA.SB.createImageButtons()
+
         print("Simulando...")
+
+    def design(self):
+        global Simulating
+        Simulating = False
+        MA.SB.createImageButtons()
 
     def generate_netlist(self):
        netlist_dict =  MA.ElectricCircuit.get_connections_for_netlist()
@@ -30,9 +40,14 @@ class DropDown():
                                                          ,("All files", "*.*") ))
         print(netlist_file)
 
+    #def getsimulating(self):
+        #return self.simulating
 
     def __init__(self, root):
         self.root = root
+        #self.simulating = False
+        Simulating = True
+        #self.simulate = True
         dd = Menubutton(self.root, text = "Menu", anchor=W)
         dd.menu = Menu(dd)
         dd["menu"] = dd.menu
@@ -40,6 +55,7 @@ class DropDown():
         dd.menu.add_command(label = "Simular", command = self.simulate)
         dd.menu.add_command(label = "Export Netlist File",command = self.generate_netlist)
         dd.menu.add_command(label = "Import Netlist File",command = self.import_netlist)
+        dd.menu.add_command(label = "Diseño", command = self.design)
 
         dd.pack(fill = BOTH)
 
@@ -121,18 +137,43 @@ class SideBar():
         imagen = PhotoImage(file = ruta)
         return imagen
 
-    def createImageButtons(self):
-        resImage = self.cargarimg('Res.png')
-        volImage = self.cargarimg('FuenteVoltaje.png')
-        self.resBut = Button(self.window, image = resImage, command = self.nameRes)        
-        self.resBut.image = resImage
-        self.resBut.place(anchor = CENTER, x = 100, y = 200)
-        self.volBut = Button(self.window, text = "Fuente", image = volImage, command = self.nameVol)
-        self.volBut.image = volImage
-        self.volBut.place(anchor = CENTER, x = 100, y = 400)
-        self.cleanBut = Button(self.window, text = "clean window", command = self.cleanWin)
-        self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
-        
+
+    def createImageButtons(self):    
+        global Simulating    
+        if Simulating == False:         
+            resImage = self.cargarimg('Res.png')
+            volImage = self.cargarimg('FuenteVoltaje.png')  
+            self.resBut = Button(self.window, image = resImage, command = self.nameRes)            
+            self.volBut = Button(self.window, text = "Fuente", image = volImage, command = self.nameVol)             
+            self.cleanBut = Button(self.window, text = "clean window", command = self.cleanWin) 
+            self.resBut.image = resImage             
+            self.volBut.image = volImage    
+            self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
+            self.volBut.place(anchor = CENTER, x = 100, y = 400)            
+            self.cleanBut.place(anchor = CENTER, x = 100, y = 100)                            
+        else:
+            #**********EN CASO QUE SEA SIMULACION***********#
+            self.resBut.place_forget()
+            self.volBut.place_forget()
+            self.cleanBut.place_forget()
+            self.simulationButtons()     
+                
+            
+    def simulationButtons(self):
+        global Simulating     
+        self.addName = Button(self.window, text = "Add name to node", command = self.addNameToNode)                           
+        self.addName.place(anchor = CENTER, x = 100, y = 200) 
+        self.resistancesList = Button(self.window, text = "Lista de resistencias", command = self.addNameToNode)                           
+        self.resistancesList.place(anchor = CENTER, x = 100, y = 300) 
+        self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.addNameToNode)                           
+        self.plusVolt.place(anchor = CENTER, x = 100, y = 400) 
+        self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.addNameToNode)                           
+        self.minusVolt.place(anchor = CENTER, x = 100, y = 500) 
+        for Cable in MA.cablesList:
+            Cable.showToolTip()
+
+          
+                    
     def nameRes(self):
         self.w = popupWindow(self.root)
         self.resBut["state"] = "disabled" 
@@ -144,8 +185,6 @@ class SideBar():
         self.nodeConnectionCounter += 1
 
         return name
-
-
 
     def createResistor(self, value, name, vertical):       
         Res1 = ResistorGUI(self.root, value, name, vertical)
@@ -180,26 +219,37 @@ class SideBar():
         MA.MP.paintWindow.delete("cable")
         MA.MP.paintWindow.delete("label")
 
-        
-       
+    def addNameToNode(self):
+        pass     
 
     def __init__(self, root):
         self.root = root
+        #self.simulating = simulating
         self.window = Canvas(self.root,width=200, height = 600)
         self.window.pack(side = RIGHT, fill = Y)
         self.label = Label(self.root, text = "")
         self.label.pack(pady = 20)
         self.allElements = []
-        self.nodeConnectionCounter = 0
-        self.createImageButtons()
+        #self.cablesList = []
+        self.nodeConnectionCounter = 0         
+        self.createImageButtons()     
         self.x = 50
         self.y = 50
 
+
 class Cable():
     def drawCable(self, x1, y1, x2, y2):
-        cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable", width = 5)
-        CanvasTooltip(MA.MP.paintWindow, cable, text = 'V = ' + str(self.voltage) +  '\n' + 'I = ' + str(self.current))
+        global Simulating
+        self.cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable", width = 5)
         print('V = ' + str(self.voltage) + '\n' + 'I = ' + str(self.current))
+
+    def koko(self):
+        print('mac34')
+
+    def showToolTip(self):
+        CanvasTooltip(MA.MP.paintWindow, self.cable, text = 'V = ' + str(self.voltage) +  '\n' + 'I = ' + str(self.current))
+
+
     def __init__(self, root, x1, y1, x2, y2, component1, component2):
         self.root = root
         self.x1 = x1
@@ -272,20 +322,29 @@ class ResistorGUI():
 
         else:
             if side == 'right':
-                Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, MA.component1, self.resistorNode)
+                c1 = Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode) 
+                MA.cablesList.append(c1)
+                c1.koko()
             
             elif side == 'left':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, MA.component1, self.resistorNode)
+                c2 = Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
+                MA.cablesList.append(c2)
+                c2.koko()
+               
             
             elif side == 'top':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 12, self.corners[1], MA.component1, self.resistorNode)
+                c3 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 12, self.corners[1], MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
+                MA.cablesList.append(c3)
+                c3.koko()
 
             elif side == 'bottom':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0] +12, self.corners[3], MA.component1, self.resistorNode)
+                c4 = Cable(self.root, MA.x1, MA.y1, self.corners[0] +12, self.corners[3], MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
+                MA.cablesList.append(c4)
+                c4.koko()
 
 
     def drag_start(self, event):
@@ -369,6 +428,7 @@ class ResistorGUI():
         self._drag_data = {"x": 0, "y": 0, "item": None}
         self.resistance = resistance
         self.name = name
+        #self.cablesList = cablesList
         self.x = 50
         self.y = 50
         self.img = None
@@ -551,13 +611,16 @@ class MainApplication():
         self.parent = parent
         self.nodeCount = 0
         self.DD = DropDown(self.parent)
+        #self.simulating = self.DD.getsimulating()
         self.MP = MainPanel(self.parent)
         self.MP.grid()
         self.SB = SideBar(self.parent)
+        #self.SB.grid()
         self.resList = []
         self.resImg = []
         self.volList = []  
         self.volImg = []  
+        self.cablesList = []
         self.click = False
         self.x1 = None
         self.y1 = None
