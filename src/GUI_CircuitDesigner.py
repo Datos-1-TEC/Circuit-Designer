@@ -46,7 +46,7 @@ class DropDown():
     def __init__(self, root):
         self.root = root
         #self.simulating = False
-        Simulating = True
+        #Simulating = True
         #self.simulate = True
         dd = Menubutton(self.root, text = "Menu", anchor=W)
         dd.menu = Menu(dd)
@@ -140,39 +140,33 @@ class SideBar():
 
     def createImageButtons(self):    
         global Simulating    
-        if Simulating == False:         
-            resImage = self.cargarimg('Res.png')
-            volImage = self.cargarimg('FuenteVoltaje.png')  
-            self.resBut = Button(self.window, image = resImage, command = self.nameRes)            
-            self.volBut = Button(self.window, text = "Fuente", image = volImage, command = self.nameVol)             
-            self.cleanBut = Button(self.window, text = "clean window", command = self.cleanWin) 
-            self.resBut.image = resImage             
-            self.volBut.image = volImage    
+        if Simulating == False: 
+            self.resBut.place_forget()
+            self.volBut.place_forget()
+            self.cleanBut.place_forget()
+            self.addName.place_forget()
+            self.resistancesList.place_forget()
+            self.plusVolt.place_forget()
+            self.minusVolt.place_forget()         
             self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
             self.volBut.place(anchor = CENTER, x = 100, y = 400)            
-            self.cleanBut.place(anchor = CENTER, x = 100, y = 100)                            
+            self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
         else:
             #**********EN CASO QUE SEA SIMULACION***********#
             self.resBut.place_forget()
             self.volBut.place_forget()
             self.cleanBut.place_forget()
-            self.simulationButtons()     
-                
-            
-    def simulationButtons(self):
-        global Simulating     
-        self.addName = Button(self.window, text = "Add name to node", command = self.addNameToNode)                           
-        self.addName.place(anchor = CENTER, x = 100, y = 200) 
-        self.resistancesList = Button(self.window, text = "Lista de resistencias", command = self.addNameToNode)                           
-        self.resistancesList.place(anchor = CENTER, x = 100, y = 300) 
-        self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.addNameToNode)                           
-        self.plusVolt.place(anchor = CENTER, x = 100, y = 400) 
-        self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.addNameToNode)                           
-        self.minusVolt.place(anchor = CENTER, x = 100, y = 500) 
-        for Cable in MA.cablesList:
-            Cable.showToolTip()
+            self.addName.place_forget()
+            self.resistancesList.place_forget()
+            self.plusVolt.place_forget()
+            self.minusVolt.place_forget()
+            self.addName.place(anchor = CENTER, x = 100, y = 200) 
+            self.resistancesList.place(anchor = CENTER, x = 100, y = 300) 
+            self.plusVolt.place(anchor = CENTER, x = 100, y = 400) 
+            self.minusVolt.place(anchor = CENTER, x = 100, y = 500)
 
-          
+            for Cable in MA.cablesList:
+                Cable.showToolTip()             
                     
     def nameRes(self):
         self.w = popupWindow(self.root)
@@ -232,7 +226,25 @@ class SideBar():
         self.allElements = []
         #self.cablesList = []
         self.nodeConnectionCounter = 0         
-        self.createImageButtons()     
+        resImage = self.cargarimg('Res.png')
+        volImage = self.cargarimg('FuenteVoltaje.png')  
+        self.resBut = Button(self.window, image = resImage, command = self.nameRes)            
+        self.volBut = Button(self.window, text = "Fuente", image = volImage, command = self.nameVol)             
+        self.cleanBut = Button(self.window, text = "clean window", command = self.cleanWin) 
+        self.resBut.image = resImage             
+        self.volBut.image = volImage
+        self.addName = Button(self.window, text = "Add name to node", command = self.addNameToNode)                           
+        self.resistancesList = Button(self.window, text = "Lista de resistencias", command = self.addNameToNode)                           
+        self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.addNameToNode)                           
+        self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.addNameToNode)                           
+        self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
+        self.volBut.place(anchor = CENTER, x = 100, y = 400)            
+        self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
+        self.addName.place(anchor = CENTER, x = 100, y = 200) 
+        self.resistancesList.place(anchor = CENTER, x = 100, y = 300) 
+        self.plusVolt.place(anchor = CENTER, x = 100, y = 400) 
+        self.minusVolt.place(anchor = CENTER, x = 100, y = 500) 
+        self.createImageButtons()
         self.x = 50
         self.y = 50
 
