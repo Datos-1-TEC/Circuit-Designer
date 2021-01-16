@@ -71,6 +71,10 @@ nodeD.add_destination(nodeF, 1)
 
 nodeF.add_destination(nodeE, 5)
 
+print("Edge - node a")
+
+
+
 
 graph = Graph()
 
@@ -82,7 +86,8 @@ graph.addNode(nodeE)
 graph.addNode(nodeF)
 
 myDijsktra = Dijkstra()
-graphh = myDijsktra.calculateShortestPathFromSource(graph, nodeB)
+graph = myDijsktra.calculateShortestPathFromSource(graph, nodeB)
+
 
 
 

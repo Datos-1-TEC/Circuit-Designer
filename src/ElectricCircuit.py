@@ -92,6 +92,21 @@ class ElectricCircuit:
 
     def get_connections_for_netlist(self):
         return self.connections_for_netlist
+
+    def get_graph_as_dict(self):
+        dict_graph = {}
+        for node in self.graph_circuit.get_nodes():
+            
+            adj_nodes = node.get_adjacent_nodes()
+            print("Printing adj_nodes")
+            print(adj_nodes)
+            for key,value in adj_nodes.items():
+                adj_nodes_dict = {}
+                adj_nodes_dict[key.get_name()] = value
+                dict_graph[node.get_name()] = adj_nodes_dict
+                
+        print(dict_graph)
+        return dict_graph
     
 class Resistor(Node):
     """ A class used to represent a resistor component of the circuit

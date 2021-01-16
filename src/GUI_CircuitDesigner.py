@@ -10,6 +10,7 @@ from ElectricCircuit import *
 from CanvasToolTip import *
 from NetlistExporter import *
 from tkinter import filedialog 
+from Dijkstra2 import * 
 Simulating = False
 
 
@@ -43,6 +44,10 @@ class DropDown():
     #def getsimulating(self):
         #return self.simulating
 
+    def test_dict(self):
+        MA.ElectricCircuit.get_graph_as_dict()
+
+
     def __init__(self, root):
         self.root = root
         #self.simulating = False
@@ -56,6 +61,7 @@ class DropDown():
         dd.menu.add_command(label = "Export Netlist File",command = self.generate_netlist)
         dd.menu.add_command(label = "Import Netlist File",command = self.import_netlist)
         dd.menu.add_command(label = "Diseño", command = self.design)
+        dd.menu.add_command(label = "Prueba dijsktra", command = self.test_dict)
 
         dd.pack(fill = BOTH)
 
