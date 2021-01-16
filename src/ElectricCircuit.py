@@ -2,11 +2,11 @@ from Graph import *
 
 class ElectricCircuit:
     """A class used to represent an Electric Circuit
-        ----------------Atributtes-------------------
+        Atributtes-------------------
         graph_circuit: graph 
             data structure where connections between components in the Electric Circuit are made
         
-        ----------------Methods----------------------
+        Methods----------------------
         1. create_resistor_link(resistor, connection_name):
             Adds a destination Node to the resistor which will be used to make connections in the circuit
             & inserts that node to the graph_circuit
@@ -25,7 +25,7 @@ class ElectricCircuit:
     def create_resistor_link(self, resistor, connection_name):
         """ Adds a destination Node to the resistor which will be used to make connections in the circuit
             & inserts that node to the graph_circuit
-            ----------------Parameters--------------
+            Parameters--------------
             resistor: Resistor
             connection_name: str
 
@@ -37,18 +37,19 @@ class ElectricCircuit:
     def create_voltage_link(self, voltage, connection_name):
         """ Adds a destination node to the voltage source which will be used to make connections in the circuit
             & inserts that node to the graph_circuit
-            ----------------Parameters--------------
+            Parameters--------------
             voltage: Voltage
             connection_name: str
 
         """
         connection = Node(connection_name)
         voltage.add_destination(connection, 0)
+        connection.set_voltage(voltage.get_voltage())
         self.graph_circuit.addNode(connection)
 
     def connect_components(self, component1, component2):
         """ Establishes the real connection between two components through its links
-            ----------------Parameters--------------
+            Parameters--------------
             component1: Resistor/Voltage
             component2: Resistor/Voltage
         """
@@ -71,7 +72,7 @@ class ElectricCircuit:
 
     def search_connection(self, component):
         """ Searches for the component's link
-            ----------------Parameters--------------
+            Parameters--------------
             component1: Resistor/Voltage
             return: node, is the link we are looking for 
         """
@@ -94,7 +95,7 @@ class ElectricCircuit:
     
 class Resistor(Node):
     """ A class used to represent a resistor component of the circuit
-        ----------------Atributtes-------------------
+        Atributtes-------------------
         name: str, resistor name
         val: int, resistor value in ohms
         unit: str, SI unit for resistance
@@ -123,7 +124,7 @@ class Resistor(Node):
 
 class Voltage (Node):
     """ A class used to represent a resistor component of the circuit, inheritates from Node object
-        ----------------Atributtes-------------------
+        Atributtes-------------------
         name: str, voltage source name
         val: int, voltage source value in Volts
         unit: str, SI unit for voltage
@@ -153,6 +154,3 @@ class Voltage (Node):
     def print_voltage(self):
         print("Source name: %s value: %s", self.get_name(), self.get_val(), self.unit)
 
-EC = ElectricCircuit()
-
-print(EC.connect_components.__doc__)

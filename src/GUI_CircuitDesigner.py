@@ -253,14 +253,11 @@ class Cable():
     def drawCable(self, x1, y1, x2, y2):
         global Simulating
         self.cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable", width = 5)
-        print('V = ' + str(self.voltage) + '\n' + 'I = ' + str(self.current))
-
-    def koko(self):
-        print('mac34')
+        
 
     def showToolTip(self):
-        CanvasTooltip(MA.MP.paintWindow, self.cable, text = 'V = ' + str(self.voltage) +  '\n' + 'I = ' + str(self.current))
-
+        CanvasTooltip(MA.MP.paintWindow, self.cable, text = 'V = ' + str(self.voltage) + "V" +  '\n' + 'I = ' + str(self.current) + "mA")
+        print('V = ' + str(self.voltage) + '\n' + 'I = ' + str(self.current))
 
     def __init__(self, root, x1, y1, x2, y2, component1, component2):
         self.root = root
@@ -337,26 +334,26 @@ class ResistorGUI():
                 c1 = Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode) 
                 MA.cablesList.append(c1)
-                c1.koko()
+                
             
             elif side == 'left':
                 c2 = Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
                 MA.cablesList.append(c2)
-                c2.koko()
+                
                
             
             elif side == 'top':
                 c3 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 12, self.corners[1], MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
                 MA.cablesList.append(c3)
-                c3.koko()
+                
 
             elif side == 'bottom':
                 c4 = Cable(self.root, MA.x1, MA.y1, self.corners[0] +12, self.corners[3], MA.component1, self.resistorNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
                 MA.cablesList.append(c4)
-                c4.koko()
+                
 
 
     def drag_start(self, event):

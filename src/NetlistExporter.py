@@ -1,5 +1,5 @@
 
-from os import add_dll_directory
+#from os import add_dll_directory
 from Graph import *
 
 #Clase que permite crear un netlist file con la información del circuito 
