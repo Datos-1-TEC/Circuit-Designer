@@ -8,7 +8,7 @@ class Dijkstra:
         self.unsettledNodes = set()
 
     def calculateShortestPathFromSource(self,graph, source):
-        source.set_distance(0)
+        source.set_weight(0)
 
         self.unsettledNodes.add(source)
         while(len(self.unsettledNodes)!=0):
@@ -32,7 +32,7 @@ class Dijkstra:
         lowestDistanceNode = None
         lowestDistance = sys.maxsize
         for node in unsettledNodes:
-            nodeDistance = node.get_distance()
+            nodeDistance = node.get_weight()
             if nodeDistance < lowestDistance:
                 lowestDistance = nodeDistance
                 lowestDistanceNode = node
@@ -40,14 +40,49 @@ class Dijkstra:
         return lowestDistanceNode
 
     def calculateMinimumDistance(self, evaluationNode, edgeWeight, sourceNode):
-        sourceDistance = sourceNode.get_distance()
+        sourceDistance = sourceNode.get_weight()
         #SUMAR VOLTAJES DE SOURCE MAS VOLTAJE ADYACENTE
-        if sourceDistance + edgeWeight < evaluationNode.get_distance():
-            evaluationNode.set_distance(sourceNode + edgeWeight)
+        print("sourceDistance: ", sourceDistance)
+        print("edge: ", edgeWeight)
+        print("eval: ", evaluationNode.get_weight())
+        if sourceDistance + edgeWeight < evaluationNode.get_weight():
+            evaluationNode.set_weight(sourceDistance + edgeWeight)
             shortestPath = sourceNode.get_shortest_path()
             shortestPath.insert(sourceNode)
             evaluationNode.set_shortest_path(shortestPath)
 
+nodeA = Node("A")
+nodeB = Node("B")
+nodeC = Node("C")
+nodeD = Node("D")
+nodeE = Node("E")
+nodeF = Node("F")
+
+nodeA.add_destination(nodeB, 10)
+nodeA.add_destination(nodeC, 15)
+
+nodeB.add_destination(nodeD, 12)
+nodeB.add_destination(nodeF, 15)
+
+nodeC.add_destination(nodeE, 10)
+
+nodeD.add_destination(nodeE, 2)
+nodeD.add_destination(nodeF, 1)
+
+nodeF.add_destination(nodeE, 5)
+
+
+graph = Graph()
+
+graph.addNode(nodeA)
+graph.addNode(nodeB)
+graph.addNode(nodeC)
+graph.addNode(nodeD)
+graph.addNode(nodeE)
+graph.addNode(nodeF)
+
+myDijsktra = Dijkstra()
+graphh = myDijsktra.calculateShortestPathFromSource(graph, nodeB)
 
 
 
