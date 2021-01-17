@@ -1,6 +1,6 @@
 import math
 
-class Dijstra2:
+class Dijkstra2:
 
     def __init__(self,graph,source,target):
         self.unvisited_nodes = graph
@@ -93,9 +93,5 @@ class Dijstra2:
         # print(shortest_distance)
 
 
-graph = {'a':{'b':5,'c':2},'b':{'c':1,'d':3},'c':{'b':3,'d':7},'d':{'e':7},'e':{'d':9}}
-#Calling the function with source as 'a' and target as 'e'.
 
-dj = Dijstra2(graph,'a','e')
-dj.get_shortest_path()
 

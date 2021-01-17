@@ -1,4 +1,5 @@
 from Graph import *
+import random
 
 class ElectricCircuit:
     """A class used to represent an Electric Circuit
@@ -32,6 +33,9 @@ class ElectricCircuit:
         """
         connection = Node(connection_name)
         resistor.add_destination(connection, resistor.get_val())
+        connection.set_voltage(random.randint(1, 5))
+        volt = connection.get_voltage()
+        connection.set_current(1000.0*(volt/int(resistor.get_val())))
         self.graph_circuit.addNode(connection)
     
     def create_voltage_link(self, voltage, connection_name):
@@ -44,7 +48,8 @@ class ElectricCircuit:
         """
         connection = Node(connection_name)
         voltage.add_destination(connection, 0)
-        connection.set_voltage(voltage.get_voltage())
+        connection.set_voltage(voltage.get_val())
+        connection.set_current(random.randint(1, 10))
         self.graph_circuit.addNode(connection)
 
     def connect_components(self, component1, component2):
@@ -60,11 +65,14 @@ class ElectricCircuit:
 
         if isinstance(component2, Resistor):
             connection1.add_destination(connection2, component2.get_val())
+
             print('Se conectaron' + component1.get_name(), component2.get_name())
             self.connections_for_netlist[component1.get_name()] = component2.get_name(),component2.get_val(), component1.get_val()
             print(self.connections_for_netlist)
             
         else:
+            if component2.get_name() == "V0":
+                connection2.set_voltage(0)
             connection1.add_destination(connection2, 0)
             self.connections_for_netlist[component1.get_name()] = component2.get_name(),component2.get_val(),component1.get_val()
             print(self.connections_for_netlist)
@@ -99,11 +107,12 @@ class ElectricCircuit:
             
             adj_nodes = node.get_adjacent_nodes()
             print("Printing adj_nodes")
-            print(adj_nodes)
-            for key,value in adj_nodes.items():
-                adj_nodes_dict = {}
-                adj_nodes_dict[key.get_name()] = value
-                dict_graph[node.get_name()] = adj_nodes_dict
+            print(adj_nodes.items())
+            adj_nodes_dict = {}
+            for key, value in adj_nodes.items():
+                
+                adj_nodes_dict[key.get_name()] = key.get_voltage()
+            dict_graph[node.get_name()] = adj_nodes_dict
                 
         print(dict_graph)
         return dict_graph

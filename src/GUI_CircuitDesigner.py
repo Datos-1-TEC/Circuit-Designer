@@ -45,7 +45,9 @@ class DropDown():
         #return self.simulating
 
     def test_dict(self):
-        MA.ElectricCircuit.get_graph_as_dict()
+        graph = MA.ElectricCircuit.get_graph_as_dict()
+        dj = Dijkstra2(graph, 'C0', 'C5')
+        dj.get_shortest_path()
 
 
     def __init__(self, root):
@@ -292,7 +294,7 @@ class ResistorGUI():
             imgRes = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,500), image = resImage, tag = "resistance") 
             self.img = imgRes               
             self.corners = MA.MP.paintWindow.bbox(imgRes)             
-            l = Label(MA.MP.paintWindow, text = self.name + "\n" + self.resistance + '\u03A9')
+            l = Label(MA.MP.paintWindow, text = self.name + "\n" + str(self.resistance) + '\u03A9')
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
             #lv = Label(MA.MP.paintWindow, text = self.resistance)
             #self.resistancelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = NW, tag = "label")
@@ -303,7 +305,7 @@ class ResistorGUI():
             imgRes2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,500), image = resImage2, tag = "resistance")
             self.img = imgRes2
             self.corners = MA.MP.paintWindow.bbox(imgRes2)   
-            l = Label(MA.MP.paintWindow, text = self.name + "\n" + self.resistance + '\u03A9')  
+            l = Label(MA.MP.paintWindow, text = self.name + "\n" + str(self.resistance) + '\u03A9')  
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
             #lv = Label(MA.MP.paintWindow, text = self.resistance)
             #self.resistancelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
@@ -441,7 +443,7 @@ class ResistorGUI():
         self.vertical = vertical
         self.root = root
         self._drag_data = {"x": 0, "y": 0, "item": None}
-        self.resistance = resistance
+        self.resistance = int(resistance)
         self.name = name
         #self.cablesList = cablesList
         self.x = 50
@@ -472,7 +474,7 @@ class FuenteVoltajeGUI():
             imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
             self.img = imgVol
             self.corners = MA.MP.paintWindow.bbox(imgVol)
-            l = Label(MA.MP.paintWindow, text = self.name + "\n" + self.voltage + "V")
+            l = Label(MA.MP.paintWindow, text = self.name + "\n" + str(self.voltage) + "V")
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
             #lv = Label(MA.MP.paintWindow, text = self.voltage)
             #self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
@@ -483,7 +485,7 @@ class FuenteVoltajeGUI():
             imgVol2 = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage2, tag = "voltage")
             self.img = imgVol2
             self.corners = MA.MP.paintWindow.bbox(imgVol2)
-            l = Label(MA.MP.paintWindow, text = self.name + "\n" + self.voltage + "V")  
+            l = Label(MA.MP.paintWindow, text = self.name + "\n" + str(self.voltage) + "V")  
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
             #lv = Label(MA.MP.paintWindow, text = self.voltage)
             #self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
@@ -515,21 +517,28 @@ class FuenteVoltajeGUI():
 
         else:
             if side == 'right':
-                Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 35, MA.component1, self.voltageNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode) 
+                c1 = Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 35, MA.component1, self.voltageNode)
+                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+                c1.voltage = self.voltageNode.get_val() 
+                MA.cablesList.append(c1)
             
             elif side == 'left':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 35, MA.component1, self.voltageNode)
+                c2 = Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 35, MA.component1, self.voltageNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+                c2.voltage = self.voltageNode.get_val()
+                MA.cablesList.append(c2)
             
             elif side == 'top':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[1], MA.component1, self.voltageNode)
+                c3 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[1], MA.component1, self.voltageNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+                c3.voltage = self.voltageNode.get_val()
+                MA.cablesList.append(c3)
 
             elif side == 'bottom':
-                Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[3], MA.component1, self.voltageNode)
+                c4 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[3], MA.component1, self.voltageNode)
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
-
+                c4.voltage = self.voltageNode.get_val()
+                MA.cablesList.append(c4)
     def drag_start(self, event):
         """Begining drag of an object"""
         # record the item and its location
@@ -604,7 +613,7 @@ class FuenteVoltajeGUI():
     def __init__(self, root, voltage, name, vertical):
         self.vertical = vertical
         self.root = root
-        self.voltage = voltage
+        self.voltage = int(voltage)
         self.name = name
         self.x = 50
         self.y = 50

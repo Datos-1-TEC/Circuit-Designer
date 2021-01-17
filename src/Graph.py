@@ -7,18 +7,14 @@ class Node:
     def __init__(self,name):
         self.name = name 
         self.shortesPath = LinkedList()
-        self.current = random.randint(1, 10)
-        self.voltage = float(random.randint(1, 5))
+        self.current = 0.0
+        self.voltage = 0
         self.weight = sys.maxsize
         self.adjacentNodes = {}
 
     def add_destination(self,destination,weight):
         self.weight = weight
         self.adjacentNodes[destination] = self.weight
-        if self.weight != 0 and self.weight != sys.maxsize:
-            milliAmps = destination.get_current()/1000
-            destination.set_voltage(milliAmps*float(self.weight))
-            
 
     def get_name(self):
         return self.name
@@ -36,6 +32,8 @@ class Node:
         self.shortesPath = shortest_path
     def set_voltage(self, voltage):
         self.voltage = voltage
+    def set_current(self, current):
+        self.current = current
 
     def get_weight(self):
         return self.weight
