@@ -14,11 +14,11 @@ class NetlistExporter:
             component_connected,component_value,component_connected_value= tuple
             
             if "V" in component: 
-                elecric_component_description = component_connected_value + " Volt Source"
+                elecric_component_description = str(component_connected_value) + " Volt Source"
             else:
-                elecric_component_description = component_connected_value + " Ohm Resistor"
+                elecric_component_description = str(component_connected_value) + " Ohm Resistor"
 
-            lines += component + " " + component_connected + " " + component_value + " ; " + elecric_component_description + "\n"
+            lines += component + " " + component_connected + " " + str(component_value) + " ; " + elecric_component_description + "\n"
 
             self.lines_on_file.append(lines)
         
