@@ -9,7 +9,6 @@ from Graph import *
 from ElectricCircuit import *
 from CanvasToolTip import *
 from NetlistExporter import *
-from NetlistImporter import *
 from tkinter import filedialog 
 from Dijkstra2 import * 
 Simulating = False
@@ -38,18 +37,12 @@ class DropDown():
 
     def import_netlist(self):
         print("Import netlist file")
-        netlist_file = filedialog.askopenfilename(filetypes = (("Netlist Files", "*.txt")
+        netlist_file = filedialog.askopenfile(filetypes = (("Netlist Files", "*.txt")
                                                          ,("All files", "*.*") ))
-
         print(netlist_file)
 
-        netlist_importer = NetlistImporter(netlist_file)
-        netlist_importer.get_electric_components_from_file()
-
-
-
-
-
+    #def getsimulating(self):
+        #return self.simulating
 
     def test_dict(self):
         graph = MA.ElectricCircuit.get_graph_as_dict()
