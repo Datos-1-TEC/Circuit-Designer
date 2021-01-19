@@ -11,9 +11,9 @@ from CanvasToolTip import *
 from NetlistExporter import *
 from NetlistImporter import * 
 from tkinter import filedialog 
-from Dijkstra2 import * 
-Simulating = False
+from Dijkstra2 import *
 
+Simulating = False
 
 
 class DropDown():
@@ -33,7 +33,8 @@ class DropDown():
        netlist_dict =  MA.ElectricCircuit.get_connections_for_netlist()
        print("Print from menu ")
        print(netlist_dict)
-       netlist_generator = NetlistExporter(netlist_dict)
+       parent = MA.parent
+       netlist_generator = NetlistExporter(netlist_dict,parent)
        netlist_generator.create_netlist_file()
 
     def import_netlist(self):
@@ -43,12 +44,23 @@ class DropDown():
         print(netlist_file)
 
         netlist_importer = NetlistImporter(netlist_file)
-        netlist_importer.get_electric_components_from_file()
+        electric_components = netlist_importer.get_electric_components_to_create()
+
+        for electric_comp in electric_components:
+            value,component,name = electric_comp
+            print(electric_comp)
+            if "Resistor" in component:
+                MA.SB.createResistor(int(value),name,False)
+                #r = ResistorGUI(parent,int(value),name,False)
+                print("Resistor created")
+            elif "Source" in component:
+                MA.SB.createFuenteVoltaje(int(value),name,True)
+                #s = FuenteVoltajeGUI(parent,int(value),name,True)
+                print("Source created")
+
 
         
 
-    #def getsimulating(self):
-        #return self.simulating
 
     def test_dict(self):
         graph = MA.ElectricCircuit.get_graph_as_dict()
