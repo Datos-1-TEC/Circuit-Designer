@@ -42,12 +42,6 @@ class LinkedList(object):
 		return self.tail
 
 	def get_size(self):
-		if self.head == None:
-			return 0
-		current = self.head
-		while(current != None):
-			self.size += 1
-			current = current.next
 		return self.size
 
 
@@ -61,6 +55,7 @@ class LinkedList(object):
 
 	def append(self, new_data): 
 		new_node = Node(new_data) 
+		self.size += 1  
 		if self.head is None: 
 			self.head = new_node 
 			return
@@ -73,15 +68,22 @@ class LinkedList(object):
 	def index(self, i):
 		current = self.head
 		cont = 0
-		while current.next != None:
-			if i == cont:
-				return current
-			else:
-				current = current.next
-				cont += 1
+		
+		while i != cont:
+			cont += 1
+			current = current.get_next()
+		return current
+				
 
+	def clear(self):
+
+		while (self.head != None):
+			temp = self.head
+			self.head = self.head.get_next()
+			temp = None
 
 	def delete(self, data):
+
 		if not self.head:
 			return
 		
@@ -100,3 +102,4 @@ class LinkedList(object):
 			temp = temp.next
 		print ("No se encontró nodo")
 		return
+

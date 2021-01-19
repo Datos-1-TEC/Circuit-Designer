@@ -64,26 +64,7 @@ class SortingAlgorithms:
 
 
         
-shortestPath = LinkedList()
-shortestPath.append("R4")
-shortestPath.append("R5")
-shortestPath.append("R7")
-shortestPath.append("R1")
-shortestPath.append("R6")
-shortestPath.append("R3")
 
-print("\nBefore sorting")
-shortestPath.print_list()
-
-Sort = SortingAlgorithms(shortestPath)
-print("After insertion sort")
-Sort.insertion_Sort()
-Sort.get_list().print_list()
-print("After quick sort")
-start = shortestPath.get_head()
-end = shortestPath.get_tail()
-Sort.quick_sort(start, end)
-Sort.get_list().print_list()
 
 
         

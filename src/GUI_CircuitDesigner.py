@@ -11,9 +11,10 @@ from CanvasToolTip import *
 from NetlistExporter import *
 from NetlistImporter import * 
 from tkinter import filedialog 
-from Dijkstra2 import *
-
+from Dijkstra2 import * 
+from SortingAlgorithms import *
 Simulating = False
+from tkinter import messagebox  
 
 
 class DropDown():
@@ -58,15 +59,10 @@ class DropDown():
                 #s = FuenteVoltajeGUI(parent,int(value),name,True)
                 print("Source created")
 
-
-        
-
-
     def test_dict(self):
         graph = MA.ElectricCircuit.get_graph_as_dict()
         dj = Dijkstra2(graph, 'C0', 'C5')
         dj.get_shortest_path()
-
 
     def __init__(self, root):
         self.root = root
@@ -95,7 +91,6 @@ class MainPanel(Canvas):
         for i in range(0, h, 50):
             self.paintWindow.create_line([(0, i), (w, i)], tag='grid_line')    
 
-
     def __init__(self, root):
         self.paintWindow = Canvas(root, width = 800, height = 600, bg = 'white')
         self.paintWindow.pack(side = LEFT)
@@ -118,7 +113,6 @@ class popupWindow():
         self.CB.pack()
         self.b = Button(top, text = 'Ok', command = self.accept)
         self.b.pack()
-
     
     def accept(self):
         MA.SB.createResistor(self.e2.get(), self.e.get(), self.cbValue.get())
@@ -128,8 +122,6 @@ class popupWindow():
     def cleanup(self):
         self.value = self.e.get()
         self.top.destroy()      
-
-    
 
 class popupWindowVol(object):
     def __init__(self, master):
@@ -148,7 +140,6 @@ class popupWindowVol(object):
         self.b2 = Button(top, text = 'Ok', command = self.accept2)
         self.b2.pack()
 
-
     def accept2(self):
         MA.SB.createFuenteVoltaje(self.e4.get(), self.e3.get(), self.cbValue.get())
         self.cleanup2()
@@ -162,7 +153,6 @@ class SideBar():
         ruta = os.path.join('img', archivo)
         imagen = PhotoImage(file = ruta)
         return imagen
-
 
     def createImageButtons(self):    
         global Simulating    
@@ -186,10 +176,10 @@ class SideBar():
             self.resistancesList.place_forget()
             self.plusVolt.place_forget()
             self.minusVolt.place_forget()
-            self.addName.place(anchor = CENTER, x = 100, y = 200) 
-            self.resistancesList.place(anchor = CENTER, x = 100, y = 300) 
-            self.plusVolt.place(anchor = CENTER, x = 100, y = 400) 
-            self.minusVolt.place(anchor = CENTER, x = 100, y = 500)
+            self.addName.place(anchor = CENTER, x = 100, y = 50) 
+            self.plusVolt.place(anchor = CENTER, x = 100, y = 100) 
+            self.minusVolt.place(anchor = CENTER, x = 100, y = 150) 
+            self.resistancesList.place(anchor = CENTER, x = 100, y = 200)
 
             for Cable in MA.cablesList:
                 Cable.showToolTip()             
@@ -240,8 +230,37 @@ class SideBar():
         MA.MP.paintWindow.delete("label")
 
     def addNameToNode(self):
-        pass     
+        pass
 
+    def show_res_names(self):
+        resistorsList = MA.resList
+
+        names_list = LinkedList()
+        for i in range(resistorsList.get_size()):
+            name = resistorsList.index(i).get_data().name
+            names_list.append(name)
+
+        sort = SortingAlgorithms(names_list)
+        
+        start = sort.get_list().get_head()
+        end = sort.get_list().get_tail()
+        sort.quick_sort(start, end)
+        asc_list = sort.get_list()
+        result_asc = self.string_results(asc_list )
+
+        sort.insertion_Sort()
+        desc_list = sort.get_list()
+        result_desc = self.string_results(desc_list)
+        
+        messagebox.showinfo("Lista", "Ascendente: " + result_asc + "\n" + "Descendente: " + result_desc)
+    
+    def string_results(self, asc_list):
+        result = ""
+        for i in range(asc_list.get_size()):
+            result += " | " + asc_list.index(i).get_data()
+
+        return result
+        
     def __init__(self, root):
         self.root = root
         #self.simulating = simulating
@@ -260,27 +279,26 @@ class SideBar():
         self.resBut.image = resImage             
         self.volBut.image = volImage
         self.addName = Button(self.window, text = "Add name to node", command = self.addNameToNode)                           
-        self.resistancesList = Button(self.window, text = "Lista de resistencias", command = self.addNameToNode)                           
+        self.resistancesList = Button(self.window, text = "Lista de resistencias", command = self.show_res_names)                           
         self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.addNameToNode)                           
         self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.addNameToNode)                           
         self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
         self.volBut.place(anchor = CENTER, x = 100, y = 400)            
         self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
-        self.addName.place(anchor = CENTER, x = 100, y = 200) 
-        self.resistancesList.place(anchor = CENTER, x = 100, y = 300) 
-        self.plusVolt.place(anchor = CENTER, x = 100, y = 400) 
-        self.minusVolt.place(anchor = CENTER, x = 100, y = 500) 
+
+        self.addName.place(anchor = CENTER, x = 100, y = 50) 
+        self.plusVolt.place(anchor = CENTER, x = 100, y = 100) 
+        self.minusVolt.place(anchor = CENTER, x = 100, y = 150) 
+        self.resistancesList.place(anchor = CENTER, x = 100, y = 200)    
         self.createImageButtons()
         self.x = 50
         self.y = 50
-
 
 class Cable():
     def drawCable(self, x1, y1, x2, y2):
         global Simulating
         self.cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable", width = 5)
         
-
     def showToolTip(self):
         CanvasTooltip(MA.MP.paintWindow, self.cable, text = 'V = ' + str(self.voltage) + "V" +  '\n' + 'I = ' + str(self.current) + "mA")
         print('V = ' + str(self.voltage) + '\n' + 'I = ' + str(self.current))
@@ -297,7 +315,6 @@ class Cable():
         self.current = MA.ElectricCircuit.search_connection(self.component1).get_current()
         self.drawCable(self.x1, self.y1, self.x2, self.y2)
     
-
 class ResistorGUI():
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
@@ -380,8 +397,6 @@ class ResistorGUI():
                 MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
                 MA.cablesList.append(c4)
                 
-
-
     def drag_start(self, event):
         """Begining drag of an object"""
         # record the item and its location
@@ -410,8 +425,6 @@ class ResistorGUI():
         #print(self._drag_data["item"])
         MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
         #MA.MP.paintWindow.coords(self.resistancelabel, self.corners[0], self.corners[1])
-
-
 
     def phb(self, event):
 
@@ -557,6 +570,7 @@ class FuenteVoltajeGUI():
                 MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
                 c4.voltage = self.voltageNode.get_val()
                 MA.cablesList.append(c4)
+
     def drag_start(self, event):
         """Begining drag of an object"""
         # record the item and its location
@@ -658,7 +672,7 @@ class MainApplication():
         self.MP.grid()
         self.SB = SideBar(self.parent)
         #self.SB.grid()
-        self.resList = []
+        self.resList = LinkedList()
         self.resImg = []
         self.volList = []  
         self.volImg = []  
@@ -669,7 +683,6 @@ class MainApplication():
         self.component1 = None
         self.ElectricCircuit = ElectricCircuit()
         
-
 if __name__ == "__main__":
     root = Tk()
     root.geometry('1000x600')
