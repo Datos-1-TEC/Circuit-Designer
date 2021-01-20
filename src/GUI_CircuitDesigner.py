@@ -160,18 +160,21 @@ class SideBar():
             self.resBut.place_forget()
             self.volBut.place_forget()
             self.cleanBut.place_forget()
+            self.groundBut.place_forget()
             self.addName.place_forget()
             self.resistancesList.place_forget()
             self.plusVolt.place_forget()
             self.minusVolt.place_forget()         
             self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
-            self.volBut.place(anchor = CENTER, x = 100, y = 400)            
+            self.volBut.place(anchor = CENTER, x = 100, y = 350)            
             self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
+            self.groundBut.place(anchor = CENTER, x = 100, y = 500)
         else:
             #**********EN CASO QUE SEA SIMULACION***********#
             self.resBut.place_forget()
             self.volBut.place_forget()
             self.cleanBut.place_forget()
+            self.groundBut.place_forget()
             self.addName.place_forget()
             self.resistancesList.place_forget()
             self.plusVolt.place_forget()
@@ -260,7 +263,9 @@ class SideBar():
             result += " | " + asc_list.index(i).get_data()
 
         return result
-        
+    def createGround(self):
+        MA.SB.createFuenteVoltaje(0, "Tierra", False)
+
     def __init__(self, root):
         self.root = root
         #self.simulating = simulating
@@ -282,14 +287,15 @@ class SideBar():
         self.resistancesList = Button(self.window, text = "Lista de resistencias", command = self.show_res_names)                           
         self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.addNameToNode)                           
         self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.addNameToNode)                           
-        self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
-        self.volBut.place(anchor = CENTER, x = 100, y = 400)            
-        self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
+        self.groundBut = Button(self.window, text = "Tierra", command = self.createGround)
+        #self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
+        #self.volBut.place(anchor = CENTER, x = 100, y = 350)            
+        #self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
 
-        self.addName.place(anchor = CENTER, x = 100, y = 50) 
-        self.plusVolt.place(anchor = CENTER, x = 100, y = 100) 
-        self.minusVolt.place(anchor = CENTER, x = 100, y = 150) 
-        self.resistancesList.place(anchor = CENTER, x = 100, y = 200)    
+        #self.addName.place(anchor = CENTER, x = 100, y = 50) 
+        #self.plusVolt.place(anchor = CENTER, x = 100, y = 100) 
+        #self.minusVolt.place(anchor = CENTER, x = 100, y = 150) 
+        #self.resistancesList.place(anchor = CENTER, x = 100, y = 200)    
         self.createImageButtons()
         self.x = 50
         self.y = 50
