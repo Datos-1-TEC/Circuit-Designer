@@ -187,7 +187,7 @@ class SideBar():
             for Cable in MA.cablesList:
                 Cable.showToolTip()             
                     
-    def nameRes(self):
+    def nameRes(self): #Max Garro
         self.w = popupWindow(self.root)
         self.resBut["state"] = "disabled" 
         self.root.wait_window(self.w.top)
