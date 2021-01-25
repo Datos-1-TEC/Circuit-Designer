@@ -148,6 +148,38 @@ class popupWindowVol(object):
         self.value = self.e3.get()
         self.top.destroy()  
 
+class popupWindowNode():
+    def __init__(self, master, x, y):
+        top = self.top = Toplevel(master)
+        self.l5 = Label(top,text="Inserte un nombre para el nodo")
+        self.l5.pack()
+        self.nombreNodo = Entry(top)
+        self.nombreNodo.pack()
+        self.cbValue1 = BooleanVar()
+        self.cbValue2 = BooleanVar()
+        self.CBInicio = Checkbutton(top, text = 'Inicio', variable = self.cbValue1)
+        self.CBInicio.pack()
+        self.CBFinal = Checkbutton(top, text = 'Final', variable = self.cbValue2)
+        self.CBFinal.pack()
+        self.b3 = Button(top, text = 'Ok', command = self.accept)
+        self.b3.pack()
+        self.x = x
+        self.y = y
+    
+    def addName(self, name):
+        labelNode = Label(MA.MP.paintWindow, text = name, background = "green")
+        labelNode.place(x = self.x, y = self.y)
+    
+    def accept(self):
+        self.addName(self.nombreNodo.get())
+        print("Inicio? ", self.cbValue1.get())
+        print("Final? ", self.cbValue2.get())
+        self.cleanup()
+
+    def cleanup(self):
+        self.value = self.nombreNodo.get()
+        self.top.destroy() 
+
 class SideBar():
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
@@ -235,6 +267,45 @@ class SideBar():
     def addNameToNode(self):
         pass
 
+    def minus_dijsktra(self):
+        top = self.top = Toplevel(self.root)
+        self.front_label = Label(top, text = "Nombre del nodo inicio")
+        self.front_label.pack()
+        self.front_entry = Entry(top)
+        self.front_entry.pack()
+        self.end_label = Label(top, text = "Nombre del nodo final")
+        self.end_label.pack()
+        self.end_entry = Entry(top)
+        self.end_entry.pack()
+        self.ok_buttton = Button(top, text = "Ok", command = self.accept_dijkstra)
+        self.ok_buttton.pack()
+
+    def search_nodes(self):
+        start = self.front_entry.get()
+        end = self.end_entry.get()
+        self.C1 = ""
+        self.C2 = ""
+        for component in self.allElements:
+            if start == component.user_node_name and isinstance(component, ResistorGUI):
+                self.C1 = component.resistorNode.get_adjacent_nodes_info()
+            elif start == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
+                self.C1 = component.voltageNode.get_adjacent_nodes_info()  
+            print(self.C1)  
+
+        for component in self.allElements:
+            if end == component.user_node_name and isinstance(component, ResistorGUI):
+                self.C2 = component.resistorNode.get_adjacent_nodes_info()
+            elif end == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
+                self.C2 = component.voltageNode.get_adjacent_nodes_info()
+            print(self.C2)
+    
+    def accept_dijkstra(self):
+        self.search_nodes()
+        graph = MA.ElectricCircuit.get_graph_as_dict()
+        dj = Dijkstra2(graph, self.C1, self.C2)
+        dj.get_shortest_path()
+        self.top.destroy()
+
     def show_res_names(self):
         resistorsList = MA.resList
 
@@ -264,7 +335,7 @@ class SideBar():
 
         return result
     def createGround(self):
-        MA.SB.createFuenteVoltaje(0, "Tierra", False)
+        MA.SB.createFuenteVoltaje(0, "V0", True)
 
     def __init__(self, root):
         self.root = root
@@ -278,16 +349,19 @@ class SideBar():
         self.nodeConnectionCounter = 0         
         resImage = self.cargarimg('Res.png')
         volImage = self.cargarimg('FuenteVoltaje.png')  
+        gndImage = self.cargarimg('GND.png')
         self.resBut = Button(self.window, image = resImage, command = self.nameRes)            
         self.volBut = Button(self.window, text = "Fuente", image = volImage, command = self.nameVol)             
         self.cleanBut = Button(self.window, text = "clean window", command = self.cleanWin) 
+        self.groundBut = Button(self.window, text = "Tierra", image = gndImage, command = self.createGround)
         self.resBut.image = resImage             
         self.volBut.image = volImage
+        self.groundBut.image = gndImage
         self.addName = Button(self.window, text = "Add name to node", command = self.addNameToNode)                           
         self.resistancesList = Button(self.window, text = "Lista de resistencias", command = self.show_res_names)                           
         self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.addNameToNode)                           
-        self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.addNameToNode)                           
-        self.groundBut = Button(self.window, text = "Tierra", command = self.createGround)
+        self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.minus_dijsktra)                           
+        
         #self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
         #self.volBut.place(anchor = CENTER, x = 100, y = 350)            
         #self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
@@ -355,53 +429,67 @@ class ResistorGUI():
         #print(type(imgRes))
 
     def drawCable(self, side):
+        global Simulating
         if MA.click == False:
             if side == 'right':
                 MA.x1 = self.corners[2]
                 MA.y1 = self.corners[1] + 12
                 MA.component1 = self.resistorNode
+                if Simulating:
+                    self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 - 10)
+                    self.user_node_name = self.w.value
 
-            
             elif side == 'left':
                 MA.x1 = self.corners[0]
                 MA.y1 = self.corners[1] + 12
                 MA.component1 = self.resistorNode
+                if Simulating:
+                    self.w = popupWindowNode(self.root, MA.x1 - 10, MA.y1 - 10)
+                    self.user_node_name = self.w.value
 
 
             elif side == 'top':
                 MA.x1 = self.corners[0] + 12
                 MA.y1 = self.corners[1]
                 MA.component1 = self.resistorNode
+
+                if Simulating:
+                    self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 )
+                    self.user_node_name = self.w.value
             
             elif side == 'bottom':
                 MA.x1 = self.corners[0] + 12
                 MA.y1 = self.corners[3]
                 MA.component1 = self.resistorNode
+                if Simulating:
+                    self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 + 10)
+                    self.user_node_name = self.w.value
 
         else:
-            if side == 'right':
-                c1 = Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, MA.component1, self.resistorNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode) 
-                MA.cablesList.append(c1)
+            if not Simulating:
+                if side == 'right':
+                    c1 = Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 12, MA.component1, self.resistorNode)
+                    MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode) 
+                    MA.cablesList.append(c1)
+                    
                 
-            
-            elif side == 'left':
-                c2 = Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, MA.component1, self.resistorNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
-                MA.cablesList.append(c2)
+                elif side == 'left':
+                    c2 = Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 12, MA.component1, self.resistorNode)
+                    MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
+                    MA.cablesList.append(c2)
+                    
                 
-               
-            
-            elif side == 'top':
-                c3 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 12, self.corners[1], MA.component1, self.resistorNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
-                MA.cablesList.append(c3)
                 
+                elif side == 'top':
+                    c3 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 12, self.corners[1], MA.component1, self.resistorNode)
+                    MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
+                    MA.cablesList.append(c3)
+                    
 
-            elif side == 'bottom':
-                c4 = Cable(self.root, MA.x1, MA.y1, self.corners[0] +12, self.corners[3], MA.component1, self.resistorNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
-                MA.cablesList.append(c4)
+                elif side == 'bottom':
+                    c4 = Cable(self.root, MA.x1, MA.y1, self.corners[0] +12, self.corners[3], MA.component1, self.resistorNode)
+                    MA.ElectricCircuit.connect_components(MA.component1, self.resistorNode)
+                    MA.cablesList.append(c4)
                 
     def drag_start(self, event):
         """Begining drag of an object"""
@@ -433,8 +521,6 @@ class ResistorGUI():
         #MA.MP.paintWindow.coords(self.resistancelabel, self.corners[0], self.corners[1])
 
     def phb(self, event):
-
-
         if self.vertical == False:
             if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
             #print(event.x , event.y)
@@ -475,7 +561,7 @@ class ResistorGUI():
                     MA.click = True
                 else:
                     MA.click = False
-
+    
     def __init__(self, root, resistance, name, vertical):
         self.vertical = vertical
         self.root = root
@@ -490,6 +576,7 @@ class ResistorGUI():
         self.namelabel = None
         self.resistancelabel = None
         self.resistorNode = Resistor(self.name, self.resistance)
+        self.user_node_name = ""
         #self.negNode = Graph.Node()
         self.show_res()
         MA.MP.paintWindow.tag_bind(self.img, "<ButtonPress-1>", self.drag_start)
@@ -505,16 +592,26 @@ class FuenteVoltajeGUI():
 
     def show_vol(self):
         if self.vertical == True:
-            volImage = self.cargarimg('FuenteVoltaje.png')
-            MA.volImg.append(volImage)
-            MA.MP.paintWindow.image = volImage
-            imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
-            self.img = imgVol
-            self.corners = MA.MP.paintWindow.bbox(imgVol)
-            l = Label(MA.MP.paintWindow, text = self.name + "\n" + str(self.voltage) + "V")
-            self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
-            #lv = Label(MA.MP.paintWindow, text = self.voltage)
-            #self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
+            if self.name == "V0":
+                volImage = self.cargarimg('GND.png')
+                MA.volImg.append(volImage)
+                MA.MP.paintWindow.image = volImage
+                imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
+                self.img = imgVol
+                self.corners = MA.MP.paintWindow.bbox(imgVol)
+                l = Label(MA.MP.paintWindow, text = self.name + "\n" + str(self.voltage) + "V")
+                self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
+            else: 
+                volImage = self.cargarimg('FuenteVoltaje.png')
+                MA.volImg.append(volImage)
+                MA.MP.paintWindow.image = volImage
+                imgVol = MA.MP.paintWindow.create_image(random.randint(100, 600), random.randint(100,600), image = volImage, tag = "voltage")
+                self.img = imgVol
+                self.corners = MA.MP.paintWindow.bbox(imgVol)
+                l = Label(MA.MP.paintWindow, text = self.name + "\n" + str(self.voltage) + "V")
+                self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
+                #lv = Label(MA.MP.paintWindow, text = self.voltage)
+                #self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         else:
             volImage2 = self.cargarimg('FuenteVoltaje2.png')            
             MA.volImg.append(volImage2)
@@ -524,58 +621,76 @@ class FuenteVoltajeGUI():
             self.corners = MA.MP.paintWindow.bbox(imgVol2)
             l = Label(MA.MP.paintWindow, text = self.name + "\n" + str(self.voltage) + "V")  
             self.namelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = l, anchor = SW, tag = "label")
-            #lv = Label(MA.MP.paintWindow, text = self.voltage)
-            #self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
+             #lv = Label(MA.MP.paintWindow, text = self.voltage)
+            #    self.voltagelabel = MA.MP.paintWindow.create_window(self.corners[0], self.corners[1], window = lv, anchor = SE, tag = "label")
         print("Se puso la fuente de voltaje")
 
     def drawCable(self, side):
+        global Simulating
         if MA.click == False:
             if side == 'right':
                 MA.x1 = self.corners[2]
                 MA.y1 = self.corners[1] + 35
                 MA.component1 = self.voltageNode
 
-            
+                if Simulating:
+                    self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 - 10)
+                    self.user_node_name = self.w.value
+                    print(self.user_node_name)
+
             elif side == 'left':
                 MA.x1 = self.corners[0]
                 MA.y1 = self.corners[1] + 35
                 MA.component1 = self.voltageNode
+                if Simulating:
+                    self.w = popupWindowNode(self.root, MA.x1 - 10, MA.y1 - 10)
+                    self.user_node_name = self.w.value
+                    print(self.user_node_name)
 
 
             elif side == 'top':
                 MA.x1 = self.corners[0] + 35
                 MA.y1 = self.corners[1]
                 MA.component1 = self.voltageNode
+                if Simulating:
+                    self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1)
+                    self.user_node_name = self.w.value
+                    print(self.user_node_name)
             
             elif side == 'bottom':
                 MA.x1 = self.corners[0] + 35
                 MA.y1 = self.corners[3]
                 MA.component1 = self.voltageNode
+                if Simulating:
+                    self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 + 10)
+                    self.user_node_name = self.w.value
+                    print(self.user_node_name)
 
         else:
-            if side == 'right':
-                c1 = Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 35, MA.component1, self.voltageNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
-                c1.voltage = self.voltageNode.get_val() 
-                MA.cablesList.append(c1)
-            
-            elif side == 'left':
-                c2 = Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 35, MA.component1, self.voltageNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
-                c2.voltage = self.voltageNode.get_val()
-                MA.cablesList.append(c2)
-            
-            elif side == 'top':
-                c3 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[1], MA.component1, self.voltageNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
-                c3.voltage = self.voltageNode.get_val()
-                MA.cablesList.append(c3)
+            if not Simulating:
+                if side == 'right':
+                    c1 = Cable(self.root, MA.x1, MA.y1, self.corners[2], self.corners[1] + 35, MA.component1, self.voltageNode)
+                    MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+                    c1.voltage = self.voltageNode.get_val() 
+                    MA.cablesList.append(c1)
+                
+                elif side == 'left':
+                    c2 = Cable(self.root, MA.x1, MA.y1, self.corners[0], self.corners[1] + 35, MA.component1, self.voltageNode)
+                    MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+                    c2.voltage = self.voltageNode.get_val()
+                    MA.cablesList.append(c2)
+                
+                elif side == 'top':
+                    c3 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[1], MA.component1, self.voltageNode)
+                    MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+                    c3.voltage = self.voltageNode.get_val()
+                    MA.cablesList.append(c3)
 
-            elif side == 'bottom':
-                c4 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[3], MA.component1, self.voltageNode)
-                MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
-                c4.voltage = self.voltageNode.get_val()
-                MA.cablesList.append(c4)
+                elif side == 'bottom':
+                    c4 = Cable(self.root, MA.x1, MA.y1, self.corners[0] + 35, self.corners[3], MA.component1, self.voltageNode)
+                    MA.ElectricCircuit.connect_components(MA.component1, self.voltageNode)
+                    c4.voltage = self.voltageNode.get_val()
+                    MA.cablesList.append(c4)
 
     def drag_start(self, event):
         """Begining drag of an object"""
@@ -604,7 +719,6 @@ class FuenteVoltajeGUI():
         self.corners = MA.MP.paintWindow.bbox(self._drag_data["item"])
         MA.MP.paintWindow.coords(self.namelabel, self.corners[0], self.corners[1])
         #MA.MP.paintWindow.coords(self.voltagelabel, self.corners[0], self.corners[1])
-
 
     def phb(self, event):        
         if self.vertical == False:
@@ -648,6 +762,7 @@ class FuenteVoltajeGUI():
                 else:
                     MA.click = False
     
+     
     def __init__(self, root, voltage, name, vertical):
         self.vertical = vertical
         self.root = root
@@ -659,6 +774,7 @@ class FuenteVoltajeGUI():
         self.corners = None
         self.namelabel = None
         self.voltagelabel = None
+        self.user_node_name = ""
         self._drag_data = {"x": 0, "y": 0, "item": None}
         self.voltageNode = Voltage(self.name, self.voltage)
         self.show_vol()
