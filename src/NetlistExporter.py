@@ -18,12 +18,12 @@ class NetlistExporter:
             for component,tuple in self.electric_components_list.items():
                 component_connected,component_value,component_connected_value= tuple
                 
-                if "V" in component: 
+                if "V" in component.get_name(): 
                     elecric_component_description = str(component_connected_value) + " Volt Source"
                 else:
                     elecric_component_description = str(component_connected_value) + " Ohm Resistor"
 
-                lines += component + " " + component_connected + " " + str(component_value) + " ; " + elecric_component_description + "\n"
+                lines += component.get_name() + " " + component_connected + " " + str(component_value) + " ; " + elecric_component_description + "\n"
 
                 self.lines_on_file.append(lines)
             
@@ -33,4 +33,5 @@ class NetlistExporter:
             self.file.writelines(lines)
             self.file.close()
             print("Done")
+            messagebox.showinfo("Netlist Created", "Netlist File has been created succesfully")
 

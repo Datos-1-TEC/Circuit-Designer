@@ -22,20 +22,37 @@ class DropDown():
         global Simulating
         Simulating = True
         MA.SB.createImageButtons()
-
         print("Simulando...")
+
+        cables_list = MA.cablesList
+        canvas = MA.MP.paintWindow
+
+        if Simulating:
+            for cable in cables_list:
+                canvas.itemconfig(cable.get_canvas_cable(), fill='green')
+
 
     def design(self):
         global Simulating
         Simulating = False
+
+        cables_list = MA.cablesList
+        canvas = MA.MP.paintWindow
+
+        if not Simulating:
+            for cable in cables_list:
+                canvas.itemconfig(cable.get_canvas_cable(), fill='black')
+                cable.showToolTipForNotSimulating()
+
         MA.SB.createImageButtons()
 
     def generate_netlist(self):
-       netlist_dict =  MA.ElectricCircuit.get_connections_for_netlist()
-       print("Print from menu ")
-       print(netlist_dict)
+       #netlist_dict =  MA.ElectricCircuit.get_connections_for_netlist()
+       netlist_dictionary = MA.ElectricCircuit.get_dict_netlist()
+       #print("Print from menu ")
+       #print(netlist_dict)
        parent = MA.parent
-       netlist_generator = NetlistExporter(netlist_dict,parent)
+       netlist_generator = NetlistExporter(netlist_dictionary,parent)
        netlist_generator.create_netlist_file()
 
     def import_netlist(self):
@@ -44,8 +61,12 @@ class DropDown():
                                                          ,("All files", "*.*") ))
         print(netlist_file)
 
-        netlist_importer = NetlistImporter(netlist_file)
+        parent = MA.parent
+
+        netlist_importer = NetlistImporter(netlist_file,parent)
         electric_components = netlist_importer.get_electric_components_to_create()
+
+        print(electric_components)
 
         for electric_comp in electric_components:
             value,component,name = electric_comp
@@ -58,6 +79,11 @@ class DropDown():
                 MA.SB.createFuenteVoltaje(int(value),name,True)
                 #s = FuenteVoltajeGUI(parent,int(value),name,True)
                 print("Source created")
+                MA.SB.createGround()
+                
+
+        netlist_importer.show_connections_from_netlist()
+
 
     def test_dict(self):
         graph = MA.ElectricCircuit.get_graph_as_dict()
@@ -259,6 +285,7 @@ class SideBar():
         MA.resList.clear()
         MA.volImg.clear()
         MA.volList.clear()
+        MA.ElectricCircuit.dict_netlist = {}
         MA.MP.paintWindow.delete("resistance")
         MA.MP.paintWindow.delete("voltage")
         MA.MP.paintWindow.delete("cable")
@@ -352,6 +379,7 @@ class SideBar():
             result += " | " + asc_list.index(i).get_data()
 
         return result
+
     def createGround(self):
         MA.SB.createFuenteVoltaje(0, "V0", True)
 
@@ -363,7 +391,6 @@ class SideBar():
         self.label = Label(self.root, text = "")
         self.label.pack(pady = 20)
         self.allElements = []
-        
         self.nodeConnectionCounter = 0         
         resImage = self.cargarimg('Res.png')
         volImage = self.cargarimg('FuenteVoltaje.png')  
@@ -389,10 +416,18 @@ class Cable():
     def drawCable(self, x1, y1, x2, y2):
         global Simulating
         self.cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable", width = 5)
+
+    def get_canvas_cable(self):
+        return self.cable
         
     def showToolTip(self):
         CanvasTooltip(MA.MP.paintWindow, self.cable, text = 'V = ' + str(self.voltage) + "V" +  '\n' + 'I = ' + str(self.current) + "mA")
         print('V = ' + str(self.voltage) + '\n' + 'I = ' + str(self.current))
+
+    def showToolTipForNotSimulating(self):
+        CanvasTooltip(MA.MP.paintWindow, self.cable, text = "Select simulate to show the values of the cable")
+
+    
 
     def __init__(self, root, x1, y1, x2, y2, component1, component2):
         self.root = root

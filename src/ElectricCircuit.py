@@ -1,5 +1,6 @@
 from Graph import *
 import random
+from Component_dict import *
 
 class ElectricCircuit:
     """A class used to represent an Electric Circuit
@@ -21,7 +22,8 @@ class ElectricCircuit:
         """
     def __init__(self):
         self.graph_circuit = Graph() 
-        self.connections_for_netlist = {}      
+        self.connections_for_netlist = {}   
+        self.dict_netlist = {}   
 
     def create_resistor_link(self, resistor, connection_name):
         """ Adds a destination Node to the resistor which will be used to make connections in the circuit
@@ -67,15 +69,43 @@ class ElectricCircuit:
             connection1.add_destination(connection2, component2.get_val())
 
             print('Se conectaron' + component1.get_name(), component2.get_name())
+
+            dict_component = Component_dict(component1.get_name())
+
+            self.dict_netlist[dict_component] = component2.get_name(),component2.get_val(), component1.get_val()
+
+
             self.connections_for_netlist[component1.get_name()] = component2.get_name(),component2.get_val(), component1.get_val()
-            print(self.connections_for_netlist)
+            #print(self.connections_for_netlist)
+
+            print("TEST DICT:")
+            print(self.dict_netlist)
+
+            for key,value in self.dict_netlist.items():
+                print(key.get_name(), value)
             
         else:
             if component2.get_name() == "V0":
                 connection2.set_voltage(0)
             connection1.add_destination(connection2, 0)
+
+            dict_component = Component_dict(component1.get_name())
+
+            self.dict_netlist[dict_component] = component2.get_name(),component2.get_val(), component1.get_val()
+
+
             self.connections_for_netlist[component1.get_name()] = component2.get_name(),component2.get_val(),component1.get_val()
-            print(self.connections_for_netlist)
+            #print(self.connections_for_netlist)
+
+            print("TEST DICT:")
+            print(self.dict_netlist)
+
+            for key,value in self.dict_netlist.items():
+                print(key.get_name(), value)
+
+
+    def get_dict_netlist(self):
+        return self.dict_netlist
 
 
     def search_connection(self, component):
