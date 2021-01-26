@@ -437,6 +437,7 @@ class ResistorGUI():
                 MA.component1 = self.resistorNode
                 if Simulating:
                     self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 - 10)
+                    self.root.wait_window(self.w.top)
                     self.user_node_name = self.w.value
 
             elif side == 'left':
@@ -445,6 +446,7 @@ class ResistorGUI():
                 MA.component1 = self.resistorNode
                 if Simulating:
                     self.w = popupWindowNode(self.root, MA.x1 - 10, MA.y1 - 10)
+                    self.root.wait_window(self.w.top)
                     self.user_node_name = self.w.value
 
 
@@ -455,6 +457,7 @@ class ResistorGUI():
 
                 if Simulating:
                     self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 )
+                    self.root.wait_window(self.w.top)
                     self.user_node_name = self.w.value
             
             elif side == 'bottom':
@@ -463,6 +466,7 @@ class ResistorGUI():
                 MA.component1 = self.resistorNode
                 if Simulating:
                     self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 + 10)
+                    self.root.wait_window(self.w.top)
                     self.user_node_name = self.w.value
 
         else:
@@ -635,6 +639,7 @@ class FuenteVoltajeGUI():
 
                 if Simulating:
                     self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 - 10)
+                    self.root.wait_window(self.w.top)
                     self.user_node_name = self.w.value
                     print(self.user_node_name)
 
@@ -644,6 +649,7 @@ class FuenteVoltajeGUI():
                 MA.component1 = self.voltageNode
                 if Simulating:
                     self.w = popupWindowNode(self.root, MA.x1 - 10, MA.y1 - 10)
+                    self.root.wait_window(self.w.top)
                     self.user_node_name = self.w.value
                     print(self.user_node_name)
 
@@ -654,6 +660,7 @@ class FuenteVoltajeGUI():
                 MA.component1 = self.voltageNode
                 if Simulating:
                     self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1)
+                    self.root.wait_window(self.w.top)
                     self.user_node_name = self.w.value
                     print(self.user_node_name)
             
@@ -663,6 +670,7 @@ class FuenteVoltajeGUI():
                 MA.component1 = self.voltageNode
                 if Simulating:
                     self.w = popupWindowNode(self.root, MA.x1 + 10, MA.y1 + 10)
+                    self.root.wait_window(self.w.top)
                     self.user_node_name = self.w.value
                     print(self.user_node_name)
 
