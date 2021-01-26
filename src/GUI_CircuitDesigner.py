@@ -287,24 +287,42 @@ class SideBar():
         self.C2 = ""
         for component in self.allElements:
             if start == component.user_node_name and isinstance(component, ResistorGUI):
-                self.C1 = component.resistorNode.get_adjacent_nodes_info()
+                self.C1 = component.resistorNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
             elif start == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
-                self.C1 = component.voltageNode.get_adjacent_nodes_info()  
-            print(self.C1)  
+                self.C1 = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
+                                 
+            print("Nombre  nodo: ", self.C1)  
 
         for component in self.allElements:
             if end == component.user_node_name and isinstance(component, ResistorGUI):
-                self.C2 = component.resistorNode.get_adjacent_nodes_info()
+                self.C2 = component.resistorNode.get_adjacent_nodes_info()[0] +component.resistorNode.get_adjacent_nodes_info()[1]
             elif end == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
-                self.C2 = component.voltageNode.get_adjacent_nodes_info()
-            print(self.C2)
+                self.C2 = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
+                
+            print("Nombre  nodo: ", self.C2)
     
     def accept_dijkstra(self):
         self.search_nodes()
+        C = ""
         graph = MA.ElectricCircuit.get_graph_as_dict()
         dj = Dijkstra2(graph, self.C1, self.C2)
         dj.get_shortest_path()
+        pathNodes = dj.get_route()
+        
+        for node in pathNodes:
+            for component in self.allElements:
+                if isinstance(component, ResistorGUI):
+                    C = component.resistorNode.get_adjacent_nodes_info()[0] + component.resistorNode.get_adjacent_nodes_info()[1]
+                    if C == node:
+                        self.shortestpath += component.name + "->"
+
+                elif isinstance(component, FuenteVoltajeGUI):
+                    C = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
+                    if C == node:
+                        self.shortestpath += component.name + "->"
+
         self.top.destroy()
+        messagebox.showinfo("Shortest path", "El camino más corto es: \n" + self.shortestpath)
 
     def show_res_names(self):
         resistorsList = MA.resList
@@ -339,13 +357,13 @@ class SideBar():
 
     def __init__(self, root):
         self.root = root
-        #self.simulating = simulating
+    
         self.window = Canvas(self.root,width=200, height = 600)
         self.window.pack(side = RIGHT, fill = Y)
         self.label = Label(self.root, text = "")
         self.label.pack(pady = 20)
         self.allElements = []
-        #self.cablesList = []
+        
         self.nodeConnectionCounter = 0         
         resImage = self.cargarimg('Res.png')
         volImage = self.cargarimg('FuenteVoltaje.png')  
@@ -362,17 +380,10 @@ class SideBar():
         self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.addNameToNode)                           
         self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.minus_dijsktra)                           
         
-        #self.resBut.place(anchor = CENTER, x = 100, y = 200)                    
-        #self.volBut.place(anchor = CENTER, x = 100, y = 350)            
-        #self.cleanBut.place(anchor = CENTER, x = 100, y = 100)
-
-        #self.addName.place(anchor = CENTER, x = 100, y = 50) 
-        #self.plusVolt.place(anchor = CENTER, x = 100, y = 100) 
-        #self.minusVolt.place(anchor = CENTER, x = 100, y = 150) 
-        #self.resistancesList.place(anchor = CENTER, x = 100, y = 200)    
         self.createImageButtons()
         self.x = 50
         self.y = 50
+        self.shortestpath = ""
 
 class Cable():
     def drawCable(self, x1, y1, x2, y2):
