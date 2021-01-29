@@ -1,5 +1,8 @@
 
 class Node(object):
+	"""***********************************************************
+	Esta clase se encarga de almacenar las referencias del nodo actual y siguiente.
+	***********************************************************"""
 	def __init__(self, data):
 		self.data = data
 		self.next = None
@@ -16,6 +19,38 @@ class Node(object):
 		self.next = next
 
 class LinkedList(object):
+	"""**********************************************************************
+	Esta clase usa la clase Node para implementar las operaciones(append, insert, entre otros).
+	Methods---------------------------------------------
+	1. print_list(self)
+		muestra en la terminal todos los elementos de la lista, en caso de estar vacia, envia mensaje
+		que dice que la lista esta vacia.
+
+	2. get_head(self)
+		retorna el nodo cabeza de la lista.
+
+	3. get_tail(self)
+		retorna la el nodo cola de la lista.
+
+	4. get_size(self)
+		retorna el tamaño de la lista.
+
+	5. insert(self, data)
+		inserta un nodo al principio de la lista.
+
+	6. append(self, new_data)
+		inserta un nodo al final de la lista.
+
+	7. index(self, i)
+		Para buscar un elemento en el indice dado.
+	
+	8. clear(self)
+		Elimina todos los elementos en la lista.
+
+	9. delete(self, data)
+		Elimina un elemento en especifico.
+
+	**********************************************************************"""
 	def __init__(self, head=None):
 		self.head = head
 		self.tail = None

@@ -19,18 +19,19 @@ from tkinter import messagebox
 
 class DropDown():
     """****************************************************************************
-    @method: simulate(self)
-    Este metodo se activa cuando se presiona el boton "Simular", lo que hace es crear los botones del
-    side bar que corresponden a cuando se pone en modo simulacion, ademas que colorea todos los cables
-    en verde para demostrar que se estan asignando y activa el showtooltip.
+    Methods----------
+    1. simulate(self)
+        Este metodo se activa cuando se presiona el boton "Simular", lo que hace es crear los botones del
+        side bar que corresponden a cuando se pone en modo simulacion, ademas que colorea todos los cables
+        en verde para demostrar que se estan asignando y activa el showtooltip.
 
-    @method: design(self)
-    Se activa cuando se presiona el boton de "diseño" (se notan los cambios en el sidebar solo si
-    se esta antes en el modo de simulacion). Lo que hace es poner los cables en negro y desactiva el
-    showtooltip.
+    2. design(self)
+        Se activa cuando se presiona el boton de "diseño" (se notan los cambios en el sidebar solo si
+        se esta antes en el modo de simulacion). Lo que hace es poner los cables en negro y desactiva el
+        showtooltip.
 
-    @method: generate_netlist(self)
-    Se activa cuando se presiona el boton "generar netlist", y se encarga de crear un netlist.
+    3. generate_netlist(self)
+        Se activa cuando se presiona el boton "generar netlist", y se encarga de crear un netlist.
 
     @method: import_netlist(self)
 
@@ -127,8 +128,9 @@ class DropDown():
 
 class MainPanel(Canvas):
     """*********************************************************
-    @method: grid(self)
-    Crea lineas a lo largo y ancho de la pantalla para dar la ilusion que es un hoja cuadriculada.
+    Methods-------------------
+    1. grid(self)
+        Crea lineas a lo largo y ancho de la pantalla para dar la ilusion que es un hoja cuadriculada.
     **********************************************************"""
     def grid(self):
         w = self.w
@@ -147,11 +149,12 @@ class MainPanel(Canvas):
 
 class popupWindow():
     """**********************************************************
-    @method: accept(self)
-    crea el resistor con los valores que se ingresaron en los inputs.
+    Methods-------------------
+    1. accept(self)
+        crea el resistor con los valores que se ingresaron en los inputs.
 
-    @method: cleanup(self)
-    limpia los inputs en los que se ingresan el nombre y valores de las resistencias.
+    2. cleanup(self)
+        limpia los inputs en los que se ingresan el nombre y valores de las resistencias.
     **********************************************************"""
     def __init__(self,master):
         top = self.top = Toplevel(master)
@@ -180,11 +183,12 @@ class popupWindow():
 
 class popupWindowVol(object):
     """***************************************************************************
-    @method: accept2(self)
-    crear las fuentes de voltaje con los nombres y valores ingresados en los inputs.
+    Methods--------------------------------
+    1. accept2(self)
+        crear las fuentes de voltaje con los nombres y valores ingresados en los inputs.
 
-    @method: cleanup2(self)
-    limpia los inputs en los que se ingresan el nombre y valores de las fuentes de voltaje.
+    2. cleanup2(self)
+        limpia los inputs en los que se ingresan el nombre y valores de las fuentes de voltaje.
     ***************************************************************************"""
     def __init__(self, master):
         top = self.top = Toplevel(master)
@@ -212,14 +216,15 @@ class popupWindowVol(object):
 
 class popupWindowNode():
     """*******************************************************************
-    @method: addName(self, name)
-    posiciona un label arriba del cable que muestra el nombre del nodo ingresado.
+    Methods 
+    1. addName(self, name)
+        posiciona un label arriba del cable que muestra el nombre del nodo ingresado.
     
-    @method: accept(self)
-    se agrega el nombre que se escribio en el input al label que se muestra arriba del cable.
+    2. accept(self)
+        se agrega el nombre que se escribio en el input al label que se muestra arriba del cable.
 
-    @method: cleanup(self)
-    limpia los inputs.
+    3. cleanup(self)
+        limpia los inputs.
     *******************************************************************"""
     def __init__(self, master, x, y):
         top = self.top = Toplevel(master)
@@ -254,49 +259,50 @@ class popupWindowNode():
 
 class SideBar():
     """*****************************************************************
-    @method: cargarimg(self, archivo)
-    se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
+    Methods---------------------------------
+    1. cargarimg(self, archivo)
+        se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
 
-    @method: createImageButtons(self)
-    crea los botones en el sidebar dependiendo de en cual condicion este el Simulating
+    2. createImageButtons(self)
+        crea los botones en el sidebar dependiendo de en cual condicion este el Simulating
     
-    @method: nameRes(self)
-    se activa cuando se presiona el boton con la imagen de la resistencia
+    3. nameRes(self)
+        se activa cuando se presiona el boton con la imagen de la resistencia
 
-    @method: get_connection_name(self)
-    retorna el nombre del nodo conexion
+    4. get_connection_name(self)
+        retorna el nombre del nodo conexion
 
-    @method: createResistor(self, value, name, vertical)
-    -Se llama al metodo ElectricCircuit.create_resistor_link pasando como parametros Res1.resistorNode y self.connectionName
-    -Agrega las imagenes a la pantalla y las agrega a una lista.
+    5. createResistor(self, value, name, vertical)
+        -Se llama al metodo ElectricCircuit.create_resistor_link pasando como parametros Res1.resistorNode y self.connectionName
+        -Agrega las imagenes a la pantalla y las agrega a una lista.
     
-    @method: nameVol(self)
-    se activa cuando se presiona el boton con la imagen de la voltaje.
+    6. nameVol(self)
+        se activa cuando se presiona el boton con la imagen de la voltaje.
 
-    @method: createFuenteVoltaje(self, value, name, vertical)
-    Agrega las imagenes a la pantalla y las agrega a una lista.
+    7. createFuenteVoltaje(self, value, name, vertical)
+        Agrega las imagenes a la pantalla y las agrega a una lista.
 
-    @method: cleanWin(self)
-    elimina todas las imagenes y labels que se muestran en pantalla.
+    8. cleanWin(self)
+        elimina todas las imagenes y labels que se muestran en pantalla.
     
-    @method: minus_dijsktra(self)
-    Despliega ventana para nombrar el nodo del principio y el del final.
+    9. minus_dijsktra(self)
+        Despliega ventana para nombrar el nodo del principio y el del final.
 
-    @method: search_nodes(self)
-    busca nodos ingresados en los entries, en el primer for se busca el nodo inicial
-    y el otro for para el final del camino que se quiere recorrer.
+    10. search_nodes(self)
+        busca nodos ingresados en los entries, en el primer for se busca el nodo inicial
+        y el otro for para el final del camino que se quiere recorrer.
 
-    @method: accept_dijkstra(self)
-    Se llama al metodo search_nodes(self), y aplica el algoritmo de Dijsktra.
+    11. accept_dijkstra(self)
+        Se llama al metodo search_nodes(self), y aplica el algoritmo de Dijsktra.
 
-    @method: show_res_names(self)
-    Muestra la lista de resistencias de la forma ascendente y descendente dependiendo de cual boton presione.
+    12. show_res_names(self)
+        Muestra la lista de resistencias de la forma ascendente y descendente dependiendo de cual boton presione.
     
-    @method: string_results(self, asc_list)
-    Se encarga de concatenar los nombres para mostrarlos en un mensaje en la ventana de dialogo.
+    13. string_results(self, asc_list)
+        Se encarga de concatenar los nombres para mostrarlos en un mensaje en la ventana de dialogo.
 
-    @method: createGround(self)
-    Crea la tierra.
+    14. createGround(self)
+        Crea la tierra.
 
     *****************************************************************"""
     def cargarimg(self, archivo): # Se carga imagen
@@ -506,18 +512,19 @@ class SideBar():
 
 class Cable():
     """**********************************************************************
-    @method: drawCable(self, x1, y1, x2, y2)
-    Crea el cable en las coordenadas otorgadas.
+    Methods--------------------------------
+    1. drawCable(self, x1, y1, x2, y2)
+        Crea el cable en las coordenadas otorgadas.
 
-    @method: get_canvas_cable(self)
-    Retorna el cable creado.
+    2. get_canvas_cable(self)
+        Retorna el cable creado.
 
-    @method: showToolTip(self)
-    Se activa cuando se posiciona el cursor encima de algun cable.
+    3. showToolTip(self)
+        Se activa cuando se posiciona el cursor encima de algun cable.
 
-    @method: showToolTipForNotSimulating(self)
-    Si se posiciona el cursor encima de algun cable, se muestra un mensaje que 
-    se debe cambiar a modo simulacion.
+    4. showToolTipForNotSimulating(self)
+        Si se posiciona el cursor encima de algun cable, se muestra un mensaje que 
+        se debe cambiar a modo simulacion.
 
     **********************************************************************"""
     def drawCable(self, x1, y1, x2, y2):
@@ -550,28 +557,29 @@ class Cable():
     
 class ResistorGUI():
     """*******************************************************
-    @method: cargarimg(self, archivo)
-    se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
+    Methods------------------------------
+    1. cargarimg(self, archivo)
+        se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
 
-    @method: show_res(self)
-    Carga la imagen de la resistencia y la muestra en pantalla, ademas que arriba de la imagen
-    muestra el nombre y valor que se le asigno.
+    2. show_res(self)
+        Carga la imagen de la resistencia y la muestra en pantalla, ademas que arriba de la imagen
+        muestra el nombre y valor que se le asigno.
 
-    @method: drawCable(self, side)
-    Dibuja un cable si se hace un click en alguno de los bordes de los dos objetos(resistencias o fuente de voltaje).
+    3. drawCable(self, side)
+        Dibuja un cable si se hace un click en alguno de los bordes de los dos objetos(resistencias o fuente de voltaje).
 
-    @method: drag_start(self, event)
-    Se encarga de guardar el objeto y su localizacion para tener la referencia.
+    4. drag_start(self, event)
+        Se encarga de guardar el objeto y su localizacion para tener la referencia.
 
-    @method: drag_stop(self, event)
-    Borra las referencias que se almacenaron en el drag_start(self, event) para poder
-    volver a hacer drag a otros objetos.
+    5. drag_stop(self, event)
+        Borra las referencias que se almacenaron en el drag_start(self, event) para poder
+        volver a hacer drag a otros objetos.
 
-    @method: drag(self, event)
-    Se encarga de mover el objeto con el mouse.
+    6. drag(self, event)
+        Se encarga de mover el objeto con el mouse.
 
-    @method: phb(self, event)
-    Dependiendo de en cual borde se haga click, se dibuja un cable hasta el segundo click en otro borde de otro elemento.
+    7. phb(self, event)
+        Dependiendo de en cual borde se haga click, se dibuja un cable hasta el segundo click en otro borde de otro elemento.
 
     *******************************************************"""
     def cargarimg(self, archivo): # Se carga imagen
@@ -768,28 +776,29 @@ class ResistorGUI():
         
 class FuenteVoltajeGUI():
     """***********************************************************************
-    @method: cargarimg(self, archivo)
-    se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
+    Methods------------------------------
+    1. cargarimg(self, archivo)
+        se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
 
-    @method: show_vol(self)
-    Carga la imagen de la fuente de voltaje y la muestra en pantalla, ademas que arriba de la imagen
-    muestra el nombre y valor que se le asigno.
+    2. show_vol(self)
+        Carga la imagen de la fuente de voltaje y la muestra en pantalla, ademas que arriba de la imagen
+        muestra el nombre y valor que se le asigno.
 
-    @method: drawCable(self, side)
-    Dibuja un cable si se hace un click en alguno de los bordes de los dos objetos(resistencias o fuente de voltaje).
+    3. drawCable(self, side)
+        Dibuja un cable si se hace un click en alguno de los bordes de los dos objetos(resistencias o fuente de voltaje).
 
-    @method: drag_start(self, event)
-    Se encarga de guardar el objeto y su localizacion para tener la referencia.
+    4. drag_start(self, event)
+        Se encarga de guardar el objeto y su localizacion para tener la referencia.
 
-    @method: drag_stop(self, event)
-    Borra las referencias que se almacenaron en el drag_start(self, event) para poder
-    volver a hacer drag a otros objetos.
+    5. drag_stop(self, event)
+        Borra las referencias que se almacenaron en el drag_start(self, event) para poder
+        volver a hacer drag a otros objetos.
 
-    @method: drag(self, event)
-    Se encarga de mover el objeto con el mouse.
+    6. drag(self, event)
+        Se encarga de mover el objeto con el mouse.
 
-    @method: phb(self, event)
-    Dependiendo de en cual borde se haga click, se dibuja un cable hasta el segundo click en otro borde de otro elemento.
+    7. phb(self, event)
+        Dependiendo de en cual borde se haga click, se dibuja un cable hasta el segundo click en otro borde de otro elemento.
     ***********************************************************************"""
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
