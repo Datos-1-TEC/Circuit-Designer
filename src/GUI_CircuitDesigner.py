@@ -18,6 +18,24 @@ from tkinter import messagebox
 
 
 class DropDown():
+    """****************************************************************************
+    @method: simulate(self)
+    Este metodo se activa cuando se presiona el boton "Simular", lo que hace es crear los botones del
+    side bar que corresponden a cuando se pone en modo simulacion, ademas que colorea todos los cables
+    en verde para demostrar que se estan asignando y activa el showtooltip.
+
+    @method: design(self)
+    Se activa cuando se presiona el boton de "diseño" (se notan los cambios en el sidebar solo si
+    se esta antes en el modo de simulacion). Lo que hace es poner los cables en negro y desactiva el
+    showtooltip.
+
+    @method: generate_netlist(self)
+    Se activa cuando se presiona el boton "generar netlist", y se encarga de crear un netlist.
+
+    @method: import_netlist(self)
+
+
+    ****************************************************************************"""
     def simulate(self):
         global Simulating
         Simulating = True
@@ -108,6 +126,10 @@ class DropDown():
         dd.pack(fill = BOTH)
 
 class MainPanel(Canvas):
+    """*********************************************************
+    @method: grid(self)
+    Crea lineas a lo largo y ancho de la pantalla para dar la ilusion que es un hoja cuadriculada.
+    **********************************************************"""
     def grid(self):
         w = self.w
         h = self.h
@@ -124,6 +146,13 @@ class MainPanel(Canvas):
         self.h = 600
 
 class popupWindow():
+    """**********************************************************
+    @method: accept(self)
+    crea el resistor con los valores que se ingresaron en los inputs.
+
+    @method: cleanup(self)
+    limpia los inputs en los que se ingresan el nombre y valores de las resistencias.
+    **********************************************************"""
     def __init__(self,master):
         top = self.top = Toplevel(master)
         self.l = Label(top,text="Inserte un nombre para la resistencia")
@@ -150,6 +179,13 @@ class popupWindow():
         self.top.destroy()      
 
 class popupWindowVol(object):
+    """***************************************************************************
+    @method: accept2(self)
+    crear las fuentes de voltaje con los nombres y valores ingresados en los inputs.
+
+    @method: cleanup2(self)
+    limpia los inputs en los que se ingresan el nombre y valores de las fuentes de voltaje.
+    ***************************************************************************"""
     def __init__(self, master):
         top = self.top = Toplevel(master)
         self.l3 = Label(top,text="Inserte un nombre para la fuente de voltaje")
@@ -175,6 +211,16 @@ class popupWindowVol(object):
         self.top.destroy()  
 
 class popupWindowNode():
+    """*******************************************************************
+    @method: addName(self, name)
+    posiciona un label arriba del cable que muestra el nombre del nodo ingresado.
+    
+    @method: accept(self)
+    se agrega el nombre que se escribio en el input al label que se muestra arriba del cable.
+
+    @method: cleanup(self)
+    limpia los inputs.
+    *******************************************************************"""
     def __init__(self, master, x, y):
         top = self.top = Toplevel(master)
         self.l5 = Label(top,text="Inserte un nombre para el nodo")
@@ -207,6 +253,32 @@ class popupWindowNode():
         self.top.destroy() 
 
 class SideBar():
+    """*****************************************************************
+    @method: cargarimg(self, archivo)
+    se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
+
+    @method: createImageButtons(self)
+    crea los botones en el sidebar dependiendo de en cual condicion este el Simulating
+    
+    @method: nameRes(self)
+    se activa cuando se presiona el boton con la imagen de la resistencia
+
+    @method: get_connection_name(self)
+    retorna el nombre del nodo conexion
+
+    @method: createResistor(self, value, name, vertical)
+    -Se llama al metodo ElectricCircuit.create_resistor_link pasando como parametros Res1.resistorNode y self.connectionName
+    -Agrega las imagenes a la pantalla y las agrega a una lista.
+    
+    @method: nameVol(self)
+    se activa cuando se presiona el boton con la imagen de la voltaje.
+
+    @method: createFuenteVoltaje(self, value, name, vertical)
+    Agrega las imagenes a la pantalla y las agrega a una lista.
+
+    @method: cleanWin(self)
+    elimina todas las imagenes y labels que se muestran en pantalla.
+    *****************************************************************"""
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
         imagen = PhotoImage(file = ruta)
