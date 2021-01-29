@@ -278,6 +278,26 @@ class SideBar():
 
     @method: cleanWin(self)
     elimina todas las imagenes y labels que se muestran en pantalla.
+    
+    @method: minus_dijsktra(self)
+    Despliega ventana para nombrar el nodo del principio y el del final.
+
+    @method: search_nodes(self)
+    busca nodos ingresados en los entries, en el primer for se busca el nodo inicial
+    y el otro for para el final del camino que se quiere recorrer.
+
+    @method: accept_dijkstra(self)
+    Se llama al metodo search_nodes(self), y aplica el algoritmo de Dijsktra.
+
+    @method: show_res_names(self)
+    Muestra la lista de resistencias de la forma ascendente y descendente dependiendo de cual boton presione.
+    
+    @method: string_results(self, asc_list)
+    Se encarga de concatenar los nombres para mostrarlos en un mensaje en la ventana de dialogo.
+
+    @method: createGround(self)
+    Crea la tierra.
+
     *****************************************************************"""
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
@@ -485,6 +505,21 @@ class SideBar():
         self.shortestpath = ""
 
 class Cable():
+    """**********************************************************************
+    @method: drawCable(self, x1, y1, x2, y2)
+    Crea el cable en las coordenadas otorgadas.
+
+    @method: get_canvas_cable(self)
+    Retorna el cable creado.
+
+    @method: showToolTip(self)
+    Se activa cuando se posiciona el cursor encima de algun cable.
+
+    @method: showToolTipForNotSimulating(self)
+    Si se posiciona el cursor encima de algun cable, se muestra un mensaje que 
+    se debe cambiar a modo simulacion.
+
+    **********************************************************************"""
     def drawCable(self, x1, y1, x2, y2):
         global Simulating
         self.cable = MA.MP.paintWindow.create_line(x1, y1, x2, y2, tag = "cable", width = 5)
@@ -514,6 +549,31 @@ class Cable():
         self.drawCable(self.x1, self.y1, self.x2, self.y2)
     
 class ResistorGUI():
+    """*******************************************************
+    @method: cargarimg(self, archivo)
+    se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
+
+    @method: show_res(self)
+    Carga la imagen de la resistencia y la muestra en pantalla, ademas que arriba de la imagen
+    muestra el nombre y valor que se le asigno.
+
+    @method: drawCable(self, side)
+    Dibuja un cable si se hace un click en alguno de los bordes de los dos objetos(resistencias o fuente de voltaje).
+
+    @method: drag_start(self, event)
+    Se encarga de guardar el objeto y su localizacion para tener la referencia.
+
+    @method: drag_stop(self, event)
+    Borra las referencias que se almacenaron en el drag_start(self, event) para poder
+    volver a hacer drag a otros objetos.
+
+    @method: drag(self, event)
+    Se encarga de mover el objeto con el mouse.
+
+    @method: phb(self, event)
+    Dependiendo de en cual borde se haga click, se dibuja un cable hasta el segundo click en otro borde de otro elemento.
+
+    *******************************************************"""
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
         imagen = PhotoImage(file = ruta)
@@ -707,6 +767,30 @@ class ResistorGUI():
         MA.MP.paintWindow.tag_bind(self.img, "<Button-3>", self.phb)
         
 class FuenteVoltajeGUI():
+    """***********************************************************************
+    @method: cargarimg(self, archivo)
+    se le ingresa una direccion de alguna imagen y retorna la imagen en cuestion.
+
+    @method: show_vol(self)
+    Carga la imagen de la fuente de voltaje y la muestra en pantalla, ademas que arriba de la imagen
+    muestra el nombre y valor que se le asigno.
+
+    @method: drawCable(self, side)
+    Dibuja un cable si se hace un click en alguno de los bordes de los dos objetos(resistencias o fuente de voltaje).
+
+    @method: drag_start(self, event)
+    Se encarga de guardar el objeto y su localizacion para tener la referencia.
+
+    @method: drag_stop(self, event)
+    Borra las referencias que se almacenaron en el drag_start(self, event) para poder
+    volver a hacer drag a otros objetos.
+
+    @method: drag(self, event)
+    Se encarga de mover el objeto con el mouse.
+
+    @method: phb(self, event)
+    Dependiendo de en cual borde se haga click, se dibuja un cable hasta el segundo click en otro borde de otro elemento.
+    ***********************************************************************"""
     def cargarimg(self, archivo): # Se carga imagen
         ruta = os.path.join('img', archivo)
         imagen = PhotoImage(file = ruta)
@@ -910,7 +994,7 @@ class FuenteVoltajeGUI():
         MA.MP.paintWindow.tag_bind(self.img, "<Button-3>", self.phb)
         
 class MainApplication():
-
+    
     def __init__(self, parent):
         self.parent = parent
         self.nodeCount = 0
