@@ -3,6 +3,27 @@ from tkinter import *
 
 
 class NetlistImporter:
+
+    """
+    Class used to import a txt file and generate electric components 
+    Atributtes------------------- 
+    parent : Tk(), window of the GUI 
+    file : file, txt file selected by the user 
+    splitted_list : list, list with specific elements from the netlist 
+    file_name : Str, string with the file name 
+    electric_components_list : list, list with the information of the components that have to be created
+
+    Methods----------------------
+    1. enlist_electric_components() 
+        reads file and adds elements to the list of electric components to be created 
+    
+    2. get_electric_components_to_create() 
+        gets list and decomposes the list into values in order to create attributes for when the GUI has to create the components 
+    
+    3. show_connections_from_netlist() 
+        shows connections from the netlist betweeen electric components
+    """
+
     def __init__(self,file,parent):
         self.parent = parent
         self.file = file
@@ -63,6 +84,14 @@ class NetlistImporter:
         popup = popupWindowConnections(self.parent,message)
 
 class popupWindowConnections(object):
+    """
+    Class that shows a pop up with information of the connections between the electric components
+    Atributtes------------------- 
+    
+    top : Toplevel(), to display the label with information
+    label : label, to show information 
+
+    """
     def __init__(self, master,message):
         top = self.top = Toplevel(master)
         top.geometry("200x100")
