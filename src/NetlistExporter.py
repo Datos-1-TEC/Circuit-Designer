@@ -3,6 +3,20 @@ from Graph import *
 
 #Clase que permite crear un netlist file con la información del circuito 
 class NetlistExporter:
+
+    """
+    Class used to create or export a netlist file with a .txt extension 
+    Atributtes------------------- 
+    parent: Tk(), window root
+    electric_components_list : dictionary, connections made during the components connections
+    file: list, file, file to write the data 
+    lines_on_file : list, list with the lines to write in the file
+    
+    Methods----------------------
+    1. create_netlist_file() 
+        create a txt file with the info from the circuit
+    """
+
     def __init__(self,connections_dictionary,parent):
         self.parent = parent 
         self.electric_components_list = connections_dictionary

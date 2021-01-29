@@ -1,14 +1,33 @@
 from LinkedList import LinkedList
 
 class SortingAlgorithms:
+
+    """
+    Class with sorting algorithms that can sort names of electric components
+    Attributes---------------------
+    list: list, List to be sorted 
+    sorted: None
+
+    1. insertion_sort() 
+        executes the algorithm insertion sort 
+
+    2. sorted_element() 
+        sorts element 
+
+    3. quick_sort() 
+        executes the algorithm quick sort
+    """
     def __init__(self, list):
         self.list = list
         self.sorted = None
 
     def get_list(self):
         return self.list
+
     #Orden descendente
+
     def insertion_Sort(self):
+
 
         current = self.list.get_head()
     
