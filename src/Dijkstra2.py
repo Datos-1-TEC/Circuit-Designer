@@ -2,6 +2,24 @@ import math
 
 class Dijkstra2:
 
+    """
+    Class used to get the shortest path or the largest path of two given nodes 
+
+    Attributes------------------------
+    unvisited_nodes : graph, graph given by parameter
+    shortest_distance : dictionary, stores the shortest distance 
+    route : list, gives the route of the nodes 
+    predecessor : dictionary, stores the predecessor nodes of a graph 
+    source : node, source node to start the algorithm 
+    target : node, final node that indicates that the algorithm should end once it reaches it
+
+
+    Methods----------------------------
+    1. get_path() 
+        gets the path between two nodes, this method works for the shortest path or largest path 
+        
+    """
+
     def __init__(self,graph,source,target, shortestpath):
         self.unvisited_nodes = graph
         self.shortest_distance = {}

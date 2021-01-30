@@ -34,7 +34,16 @@ class DropDown():
         Se activa cuando se presiona el boton "generar netlist", y se encarga de crear un netlist.
 
     @method: import_netlist(self)
+            permite que el usuario seleccione un archivo .txt para leerlo y hacer que los componentes electronicos aparezcan en el panel de diseño 
 
+    @method: generate_netlist(self) 
+        permite que se genere un archivo netlist con extension .txt, en este metodo se obtiene la información de las conexiones entre los componentes 
+
+    @method: design(self) 
+        permite alternar los modos diseño y simulación, en diseño los botones de creación de fuente de voltaje y resistencias y limpiar el panel de diseño aparecen disponibles 
+
+    @method: simulate(self)
+        permite alternar los modos diseño y simulación, en simulación aparecen los botones de obtención de camino más corto y más largo, nombrar nodos, y ordenar el nombre de las resistencias, ademas se permite que los cables del circuito se coloreen en verde para dar a entender al usuario que el modo simulación esta activo. Se hace disponible un tool tip al mover el mouse encima de los cables que muestra los valores en V y mA de cada cable
 
     ****************************************************************************"""
     def simulate(self):
@@ -122,7 +131,7 @@ class DropDown():
         dd.menu.add_command(label = "Export Netlist File",command = self.generate_netlist)
         dd.menu.add_command(label = "Import Netlist File",command = self.import_netlist)
         dd.menu.add_command(label = "Diseño", command = self.design)
-        dd.menu.add_command(label = "Prueba dijsktra", command = self.test_dict)
+        #dd.menu.add_command(label = "Prueba dijsktra", command = self.test_dict)
 
         dd.pack(fill = BOTH)
 
