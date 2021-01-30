@@ -715,7 +715,7 @@ class ResistorGUI():
             if event.x > self.corners[0] and event.x < self.corners[0] + 20 and event.y > self.corners[1] and event.y < self.corners[3]:
             #print(event.x , event.y)
             #self.x+=1
-                print("max garro")
+                print("Se ha efectuado un click")
                 self.drawCable('left')
 
                 if MA.click == False:
@@ -724,7 +724,7 @@ class ResistorGUI():
                     MA.click = False
 
             if event.x < self.corners[2] and event.x > self.corners[2] - 20 and event.y > self.corners[1] and event.y < self.corners[3]:
-                print("cr7")    
+                print("Se ha efectuado un click")    
                 self.drawCable('right')  
 
                 if MA.click == False:
@@ -735,7 +735,7 @@ class ResistorGUI():
             if event.x > self.corners[0] and event.x < self.corners[2] and event.y > self.corners[1] and event.y < self.corners[1] + 20:
             #print(event.x , event.y)
             #self.x+=1
-                print("matt garro")
+                print("Se ha efectuado un click")
                 self.drawCable('top')
 
                 if MA.click == False:
@@ -744,7 +744,7 @@ class ResistorGUI():
                     MA.click = False
 
             if event.x > self.corners[0] and event.x < self.corners[2] and event.y < self.corners[3] and event.y > self.corners[3] - 20:
-                print("cr9")  
+                print("Se ha efectuado un click")  
                 self.drawCable('bottom')      
 
                 if MA.click == False:
@@ -944,7 +944,7 @@ class FuenteVoltajeGUI():
             if event.x > self.corners[0] and event.x < self.corners[0] + 15 and event.y > self.corners[1] and event.y < self.corners[3]:
             #print(event.x , event.y)
             #self.x+=1
-                print("max garro")
+                print("Se ha efectuado un click")
                 self.drawCable('left')
 
                 if MA.click == False:
@@ -953,7 +953,7 @@ class FuenteVoltajeGUI():
                     MA.click = False
 
             if event.x < self.corners[2] and event.x > self.corners[2] - 15 and event.y > self.corners[1] and event.y < self.corners[3]:
-                print("cr7")        
+                print("Se ha efectuado un click")        
                 self.drawCable('right')  
 
                 if MA.click == False:
@@ -964,7 +964,7 @@ class FuenteVoltajeGUI():
             if event.x > self.corners[0] and event.x < self.corners[2] and event.y > self.corners[1] and event.y < self.corners[1] + 15:
             #print(event.x , event.y)
             #self.x+=1
-                print("matt garro")
+                print("Se ha efectuado un click")
                 self.drawCable('top')
 
                 if MA.click == False:
@@ -973,7 +973,7 @@ class FuenteVoltajeGUI():
                     MA.click = False
                     
             if event.x > self.corners[0] and event.x < self.corners[2] and event.y < self.corners[3] and event.y > self.corners[3] - 15:
-                print("cr9")        
+                print("Se ha efectuado un click")        
                 self.drawCable('bottom')      
 
                 if MA.click == False:
