@@ -61,6 +61,20 @@ class Node:
 
 
 class Graph:
+    """**************************************************************
+    Methods-----------------------------
+    1. addNode(self,node)
+        Agrega nodo al grafo.
+
+    2. add_edge(self, start, end, weight)
+        Agrega nodo al final del grafo.
+
+    3. get_nodes(self)
+        retorna todos los nodos en el grafo.
+
+    4. print_graph_nodes(self)
+        Muestra todos los nodos del grafo.
+    **************************************************************"""
     def __init__(self):
 
         self.nodes = set()
