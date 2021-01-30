@@ -519,7 +519,7 @@ class SideBar():
 
         self.top1.destroy()
         messagebox.showinfo("Longest path", "El camino más largo es: \n" + self.shortestpath)
-        self.shortespath = " "
+        self.shortestpath = " "
 
     def show_res_names(self):
         resistorsList = MA.resList
