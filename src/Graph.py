@@ -55,7 +55,7 @@ class Node:
     def get_adjacent_nodes_info(self):
         adj_nodes = self.get_adjacent_nodes()
         for key, value in adj_nodes.items():
-            return key.get_name() + " " + str(value)
+            return key.get_name()
 
 
 

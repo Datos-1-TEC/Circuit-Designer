@@ -1,6 +1,12 @@
 * electric circuit representation 
-V1 R1 100 ; 1 Volt Source
-R1 R2 200 ; 100 Ohm Resistor
-R2 R3 300 ; 200 Ohm Resistor
-V1 V0 0 ; 1 Volt Source
-R3 V0 0 ; 300 Ohm Resistor
+V1 R4 555 ; 10 Volt Source
+R4 R7 98 ; 555 Ohm Resistor
+R7 V0 0 ; 98 Ohm Resistor
+R4 R6 77 ; 555 Ohm Resistor
+R6 R5 50 ; 77 Ohm Resistor
+R5 V0 0 ; 50 Ohm Resistor
+V1 R1 145 ; 10 Volt Source
+R1 R2 24 ; 145 Ohm Resistor
+R2 R3 333 ; 24 Ohm Resistor
+R3 R5 50 ; 333 Ohm Resistor
+V0 V1 10 ; 0 Volt Source

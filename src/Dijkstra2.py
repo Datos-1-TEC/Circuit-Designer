@@ -2,16 +2,17 @@ import math
 
 class Dijkstra2:
 
-    def __init__(self,graph,source,target):
+    def __init__(self,graph,source,target, shortestpath):
         self.unvisited_nodes = graph
         self.shortest_distance = {}
         self.route = []
         self.predecessor = {}
+        self.shortestpath = shortestpath
 
         self.source = source
         self.target = target
 
-    def get_shortest_path(self):
+    def get_path(self):
         
         # Iterating through all the unvisited nodes
         for nodes in self.unvisited_nodes:
@@ -31,38 +32,29 @@ class Dijkstra2:
             # iterating through all the unvisited node
             for current_node in self.unvisited_nodes: 
                 
-            # For the very first time that loop runs this will be called
                 if min_Node is None:
+                    min_Node=current_node
                 
-                # Setting the value of min_Node as the current node
-                    min_Node=current_node
-                    
                 elif self.shortest_distance[min_Node] > self.shortest_distance[current_node]:
-                    
-                # I the value of min_Node is less than that of current_node, set 
-                #min_Node as current_node
-
-                    min_Node=current_node
-                    
-            # Iterating through the connected nodes of current_node (for # 
-            #example, a is connected with b and c having values 10 and 3 
-            # respectively) and the weight of the edges
+                    min_Node = current_node
 
             for child_node,value in self.unvisited_nodes[min_Node].items():
+            
+                if self.shortestpath:
+                    if value + self.shortest_distance[min_Node] < self.shortest_distance[child_node]:  
+                        
+            
+                        self.shortest_distance[child_node] = value + self.shortest_distance[min_Node]
+                        
+                
+                        self.predecessor[child_node] = min_Node
 
-                # checking if the value of the current_node + value of the edge 
-                # that connects this neighbor node with current_node
-                # is lesser than the value that distance between current nodes 
-                # and its connections
-                if value + self.shortest_distance[min_Node] < self.shortest_distance[child_node]:  
-                    
-        # If true  set the new value as the minimum distance of that connection
+                else:
+                              
                     self.shortest_distance[child_node] = value + self.shortest_distance[min_Node]
                     
-            # Adding the current node as the predecessor of the child node
                     self.predecessor[child_node] = min_Node
-            
-            # After the node has been visited (also known as relaxed) remove it from unvisited node
+
             self.unvisited_nodes.pop(min_Node)
             
         # Till now the shortest distance between the source node and target node 
@@ -95,6 +87,8 @@ class Dijkstra2:
     
     def get_route(self):
         return self.route
-
+# graph = {'C1': {'C2': 1}, 'C7': {'C0': 10}, 'C5': {'C6': 4}, 'C2': {'C3': 5}, 'C4': {'C5': 1}, 'C0': {'C1': 4, 'C4': 4}, 'C3': {'C6': 4}, 'C6': {'C7': 0}}
+# dj = Dijkstra2(graph, 'C0', 'C7', False)
+# dj.get_path()
 
 

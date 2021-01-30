@@ -402,52 +402,124 @@ class SideBar():
         self.end_label.pack()
         self.end_entry = Entry(top)
         self.end_entry.pack()
-        self.ok_buttton = Button(top, text = "Ok", command = self.accept_dijkstra)
+        self.ok_buttton = Button(top, text = "Ok", command = self.accept_minus_dijkstra)
         self.ok_buttton.pack()
+    
+    def plus_dijsktra(self):
+        top1 = self.top1 = Toplevel(self.root)
+        self.front_label1 = Label(top1, text = "Nombre del nodo inicio")
+        self.front_label1.pack()
+        self.front_entry1 = Entry(top1)
+        self.front_entry1.pack()
+        self.end_label1 = Label(top1, text = "Nombre del nodo final")
+        self.end_label1.pack()
+        self.end_entry1 = Entry(top1)
+        self.end_entry1.pack()
+        self.ok_buttton1 = Button(top1, text = "Ok", command = self.accept_plus_dijkstra)
+        self.ok_buttton1.pack()
 
-    def search_nodes(self):
-        start = self.front_entry.get()
-        end = self.end_entry.get()
+    def search_nodes(self, start_entry, end_entry):
+        start = start_entry
+        end = end_entry
         self.C1 = ""
         self.C2 = ""
         for component in self.allElements:
-            if start == component.user_node_name and isinstance(component, ResistorGUI):
-                self.C1 = component.resistorNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
-            elif start == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
-                self.C1 = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
+            if len(self.allElements) > 10:
+                if start == component.user_node_name and isinstance(component, ResistorGUI):
+                    self.C1 = component.resistorNode.get_adjacent_nodes_info()[0] + component.resistorNode.get_adjacent_nodes_info()[1] + component.resistorNode.get_adjacent_nodes_info()[2]
+                elif start == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
+                    self.C1 = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1] + component.voltageNode.get_adjacent_nodes_info()[2]
+            else:
+                if start == component.user_node_name and isinstance(component, ResistorGUI):
+                    self.C1 = component.resistorNode.get_adjacent_nodes_info()[0] + component.resistorNode.get_adjacent_nodes_info()[1]
+                elif start == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
+                    self.C1 = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1] 
+
                                  
             print("Nombre  nodo: ", self.C1)  
 
         for component in self.allElements:
-            if end == component.user_node_name and isinstance(component, ResistorGUI):
-                self.C2 = component.resistorNode.get_adjacent_nodes_info()[0] +component.resistorNode.get_adjacent_nodes_info()[1]
-            elif end == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
-                self.C2 = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
-                
+            if len(self.allElements) > 10:
+                if end == component.user_node_name and isinstance(component, ResistorGUI):
+                    self.C2 = component.resistorNode.get_adjacent_nodes_info()[0] +component.resistorNode.get_adjacent_nodes_info()[1] + component.resistorNode.get_adjacent_nodes_info()[2]
+                elif end == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
+                    self.C2 = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1] + component.voltageNode.get_adjacent_nodes_info()[2]
+            else:
+                if end == component.user_node_name and isinstance(component, ResistorGUI):
+                    self.C2 = component.resistorNode.get_adjacent_nodes_info()[0] +component.resistorNode.get_adjacent_nodes_info()[1]
+                elif end == component.user_node_name and isinstance(component, FuenteVoltajeGUI):
+                    self.C2 = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
+
             print("Nombre  nodo: ", self.C2)
     
-    def accept_dijkstra(self):
-        self.search_nodes()
+    def accept_minus_dijkstra(self):
+        self.search_nodes(self.front_entry.get(), self.end_entry.get())
         C = ""
         graph = MA.ElectricCircuit.get_graph_as_dict()
-        dj = Dijkstra2(graph, self.C1, self.C2)
-        dj.get_shortest_path()
+        dj = Dijkstra2(graph, self.C1, self.C2, True)
+        dj.get_path()
         pathNodes = dj.get_route()
         
         for node in pathNodes:
             for component in self.allElements:
                 if isinstance(component, ResistorGUI):
-                    C = component.resistorNode.get_adjacent_nodes_info()[0] + component.resistorNode.get_adjacent_nodes_info()[1]
-                    if C == node:
-                        self.shortestpath += component.name + "->"
+                    if len(self.allElements) > 10: 
+                        C = component.resistorNode.get_adjacent_nodes_info()[0] + component.resistorNode.get_adjacent_nodes_info()[1] + component.resistorNode.get_adjacent_nodes_info()[2]
+                        if C == node:
+                            self.shortestpath += component.name + "->"
+                    else:
+                        C = component.resistorNode.get_adjacent_nodes_info()[0] + component.resistorNode.get_adjacent_nodes_info()[1]
+                        if C == node:
+                            self.shortestpath += component.name + "->"
 
                 elif isinstance(component, FuenteVoltajeGUI):
-                    C = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1]
-                    if C == node:
-                        self.shortestpath += component.name + "->"
+                    if len(self.allElements) > 10:
+                        C = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1] + component.voltageNode.get_adjacent_nodes_info()[2]
+                        if C == node:
+                            self.shortestpath += component.name + "->"
+                    else:
+                        C = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1] 
+                        if C == node:
+                            self.shortestpath += component.name + "->"
 
         self.top.destroy()
         messagebox.showinfo("Shortest path", "El camino más corto es: \n" + self.shortestpath)
+        self.shortestpath = " "
+   
+    def accept_plus_dijkstra(self):
+        self.search_nodes(self.front_entry1.get(), self.end_entry1.get())
+        C = ""
+        graph = MA.ElectricCircuit.get_graph_as_dict()
+        print("Las entradas son: ", self.C1, self.C2)
+        dj = Dijkstra2(graph, self.C1, self.C2, False)
+        dj.get_path()
+        pathNodes = dj.get_route()
+        
+        for node in pathNodes:
+            for component in self.allElements:
+                if isinstance(component, ResistorGUI):
+                    if len(self.allElements) > 10: 
+                        C = component.resistorNode.get_adjacent_nodes_info()[0] + component.resistorNode.get_adjacent_nodes_info()[1] + component.resistorNode.get_adjacent_nodes_info()[2]
+                        if C == node:
+                            self.shortestpath += component.name + "->"
+                    else:
+                        C = component.resistorNode.get_adjacent_nodes_info()[0] + component.resistorNode.get_adjacent_nodes_info()[1]
+                        if C == node:
+                            self.shortestpath += component.name + "->"
+
+                elif isinstance(component, FuenteVoltajeGUI):
+                    if len(self.allElements) > 10:
+                        C = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1] + component.voltageNode.get_adjacent_nodes_info()[2]
+                        if C == node:
+                            self.shortestpath += component.name + "->"
+                    else:
+                        C = component.voltageNode.get_adjacent_nodes_info()[0] + component.voltageNode.get_adjacent_nodes_info()[1] 
+                        if C == node:
+                            self.shortestpath += component.name + "->"
+
+        self.top1.destroy()
+        messagebox.showinfo("Longest path", "El camino más largo es: \n" + self.shortestpath)
+        self.shortestpath = " "
 
     def show_res_names(self):
         resistorsList = MA.resList
@@ -502,7 +574,7 @@ class SideBar():
         self.groundBut.image = gndImage
         self.addName = Button(self.window, text = "Add name to node", command = self.addNameToNode)                           
         self.resistancesList = Button(self.window, text = "Lista de resistencias", command = self.show_res_names)                           
-        self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.addNameToNode)                           
+        self.plusVolt = Button(self.window, text = "Buscar camino + tension", command = self.plus_dijsktra)                           
         self.minusVolt = Button(self.window, text = "Buscar camino - tension", command = self.minus_dijsktra)                           
         
         self.createImageButtons()
@@ -1026,6 +1098,7 @@ class MainApplication():
         
 if __name__ == "__main__":
     root = Tk()
+    root.title("Circuit Designer")
     root.geometry('1000x600')
     root.resizable(height= YES, width = YES)
     MA = MainApplication(root)
